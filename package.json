@@ -6,17 +6,22 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@remotion/cli": "4.0.448",
-    "@remotion/zod-types": "4.0.448",
+    "@remotion/bundler": "4.0.451",
+    "@remotion/cli": "4.0.451",
+    "@remotion/lambda": "4.0.451",
+    "@remotion/renderer": "4.0.451",
+    "@remotion/tailwind-v4": "4.0.451",
+    "@remotion/transitions": "4.0.451",
+    "@remotion/zod-types": "4.0.451",
+    "dotenv": "16.6.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "remotion": "4.0.448",
-    "zod": "4.3.6",
-    "@remotion/tailwind-v4": "4.0.448",
-    "tailwindcss": "4.0.0"
+    "remotion": "4.0.451",
+    "tailwindcss": "4.0.0",
+    "zod": "4.3.6"
   },
   "devDependencies": {
-    "@remotion/eslint-config-flat": "4.0.448",
+    "@remotion/eslint-config-flat": "4.0.451",
     "@types/react": "19.2.7",
     "@types/web": "0.0.166",
     "eslint": "9.19.0",
@@ -27,9 +32,18 @@
     "dev": "remotion studio",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
-    "lint": "eslint src && tsc"
+    "lint": "eslint src && tsc",
+    "render:ad": "node scripts/render-social-ad.mjs",
+    "prepare:ad-payload": "node scripts/prepare-social-ad-payload.mjs",
+    "serve:render-api": "node scripts/render-api.mjs",
+    "lambda:deploy": "node scripts/deploy-remotion-lambda.mjs",
+    "lambda:render": "node scripts/render-on-lambda.mjs",
+    "lambda:progress": "node scripts/get-lambda-render-progress.mjs"
   },
   "sideEffects": [
     "*.css"
-  ]
+  ],
+  "overrides": {
+    "fast-xml-parser": "5.7.0"
+  }
 }
