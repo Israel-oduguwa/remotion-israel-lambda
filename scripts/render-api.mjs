@@ -16,6 +16,7 @@ import {
   slugify,
 } from "./lib/excelcna-editor-props.mjs";
 import {
+  assertDeploymentManifest,
   getLambdaConfig,
   getMergedRenderDefaults,
   readDeploymentManifest,
@@ -155,6 +156,7 @@ const renderExcelCnaEditorOnLambda = async (body) => {
   const props = normalizeExcelCnaEditorProps(body);
   const config = await getLambdaConfig();
   const deployment = await readDeploymentManifest(config.deploymentManifestPath);
+  assertDeploymentManifest(deployment);
   const outKeyBase = slugify(body.slug || body.video_title || props.adId, props.adId);
   const renderDefaults = getMergedRenderDefaults(deployment, config);
 
@@ -232,6 +234,35 @@ const server = http.createServer(async (req, res) => {
     return sendJson(res, 200, { ok: true });
   }
 
+  if (req.method === "GET" && url.pathname === "/config") {
+    if (!isAuthorized(req)) {
+      return sendJson(res, 401, { ok: false, error: "Unauthorized." });
+    }
+
+    try {
+      const config = await getLambdaConfig();
+      const deployment = await readDeploymentManifest(config.deploymentManifestPath);
+      assertDeploymentManifest(deployment);
+
+      return sendJson(res, 200, {
+        ok: true,
+        deploymentManifestPath: config.deploymentManifestPath,
+        region: deployment.region,
+        bucketName: deployment.bucketName,
+        functionName: deployment.functionName,
+        serveUrl: deployment.serveUrl,
+        siteName: deployment.siteName,
+        deployedAt: deployment.deployedAt,
+        renderDefaults: getMergedRenderDefaults(deployment, config),
+      });
+    } catch (error) {
+      return sendJson(res, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
   if (req.method === "GET" && url.pathname.startsWith("/renders/")) {
     const fileName = decodeURIComponent(url.pathname.replace(/^\/renders\//, ""));
     const filePath = join(OUTPUT_DIR, fileName);
@@ -256,6 +287,7 @@ const server = http.createServer(async (req, res) => {
 
       const config = await getLambdaConfig();
       const deployment = await readDeploymentManifest(config.deploymentManifestPath);
+      assertDeploymentManifest(deployment);
       const bucketName = clean(url.searchParams.get("bucketName"), deployment.bucketName);
       const functionName = clean(
         url.searchParams.get("functionName"),

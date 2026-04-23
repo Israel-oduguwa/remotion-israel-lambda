@@ -139,6 +139,44 @@ export const writeDeploymentManifest = async (manifestPath, data) => {
 export const readDeploymentManifest = async (
   manifestPath = DEFAULT_DEPLOYMENT_MANIFEST,
 ) => {
-  const raw = await readFile(manifestPath, "utf8");
-  return JSON.parse(raw);
+  let manifest = {};
+
+  try {
+    const raw = await readFile(manifestPath, "utf8");
+    manifest = JSON.parse(raw);
+  } catch (error) {
+    if (!process.env.REMOTION_LAMBDA_FUNCTION_NAME || !process.env.REMOTION_LAMBDA_SERVE_URL) {
+      throw new Error(
+        `Could not read Remotion Lambda deployment manifest at ${manifestPath}. ` +
+          "Deploy Lambda first, redeploy this API with deployment/remotion-lambda.json, " +
+          "or set REMOTION_LAMBDA_FUNCTION_NAME, REMOTION_LAMBDA_SERVE_URL, and REMOTION_LAMBDA_BUCKET_NAME.",
+      );
+    }
+  }
+
+  return {
+    ...manifest,
+    region:
+      clean(process.env.REMOTION_AWS_REGION || process.env.AWS_REGION) ||
+      manifest.region,
+    bucketName:
+      clean(process.env.REMOTION_LAMBDA_BUCKET_NAME) || manifest.bucketName,
+    functionName:
+      clean(process.env.REMOTION_LAMBDA_FUNCTION_NAME) || manifest.functionName,
+    serveUrl: clean(process.env.REMOTION_LAMBDA_SERVE_URL) || manifest.serveUrl,
+  };
+};
+
+export const assertDeploymentManifest = (manifest) => {
+  const missing = ["region", "bucketName", "functionName", "serveUrl"].filter(
+    (key) => !clean(manifest[key]),
+  );
+
+  if (missing.length) {
+    throw new Error(
+      `Remotion Lambda deployment config is missing: ${missing.join(", ")}. ` +
+        "Redeploy this API from the latest GitHub commit, or set these Render env vars: " +
+        "REMOTION_LAMBDA_BUCKET_NAME, REMOTION_LAMBDA_FUNCTION_NAME, REMOTION_LAMBDA_SERVE_URL, REMOTION_AWS_REGION.",
+    );
+  }
 };
