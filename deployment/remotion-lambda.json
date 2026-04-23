@@ -1,0 +1,27 @@
+{
+  "deployedAt": "2026-04-23T11:39:06.966Z",
+  "region": "us-east-1",
+  "bucketName": "remotionlambda-useast1-co4imd4n8c",
+  "serveUrl": "https://remotionlambda-useast1-co4imd4n8c.s3.us-east-1.amazonaws.com/sites/remotion-site/index.html",
+  "siteName": "remotion-site",
+  "functionName": "remotion-render-4-0-451-mem3008mb-disk4096mb-240sec",
+  "functionAlreadyExisted": true,
+  "renderDefaults": {
+    "codec": "h264",
+    "crf": 18,
+    "jpegQuality": 95,
+    "framesPerLambda": 0,
+    "concurrency": 20,
+    "imageFormat": "jpeg",
+    "maxRetries": 1,
+    "downloadBehavior": null
+  },
+  "functionOptions": {
+    "timeoutInSeconds": 240,
+    "memorySizeInMb": 3008,
+    "diskSizeInMb": 4096,
+    "createCloudWatchLogGroup": true,
+    "cloudWatchLogRetentionPeriodInDays": 14,
+    "enableLambdaInsights": false
+  }
+}
