@@ -1,46 +1,100 @@
 import "./index.css";
 import { Composition } from "remotion";
-import { HelloWorld, myCompSchema } from "./HelloWorld";
-import { Logo, myCompSchema2 } from "./HelloWorld/Logo";
-
-// Each <Composition> is an entry in the sidebar!
+import {
+  calculateSocialAdMetadata,
+  SocialAd,
+  SocialAdSchema,
+} from "./compositions/SocialAd";
+import { SocialAdV2 } from "./compositions/SocialAdV2";
+import { SocialAdV3 } from "./compositions/SocialAdV3";
+import { Exchat } from "./compositions/Exchat";
+import {
+  ExcelCNAEditor,
+  ExcelCNAEditorSchema,
+  calculateExcelCnaEditorMetadata,
+} from "./compositions/ExcelCNAEditor";
+import { excelCnaEditorInput } from "./compositions/ExcelCNAEditor/editor-input";
+import { livePreviewInput } from "./compositions/SocialAd/live-preview-input";
+import { resolveLivePreviewProps } from "./compositions/SocialAd/live-preview";
 
 export const RemotionRoot: React.FC = () => {
+  const defaultProps = resolveLivePreviewProps(livePreviewInput);
+
   return (
     <>
+      {/* Original template (unchanged) */}
       <Composition
-        // You can take the "id" to render a video:
-        // npx remotion render HelloWorld
-        id="HelloWorld"
-        component={HelloWorld}
-        durationInFrames={150}
+        id="SocialAd"
+        component={SocialAd}
+        durationInFrames={45 * 30}
         fps={30}
-        width={1920}
-        height={1080}
-        // You can override these props for each render:
-        // https://www.remotion.dev/docs/parametrized-rendering
-        schema={myCompSchema}
-        defaultProps={{
-          titleText: "Welcome to Remotion",
-          titleColor: "#000000",
-          logoColor1: "#91EAE4",
-          logoColor2: "#86A8E7",
-        }}
+        width={1080}
+        height={1920}
+        schema={SocialAdSchema}
+        defaultProps={defaultProps}
+        calculateMetadata={calculateSocialAdMetadata}
       />
 
-      {/* Mount any React component to make it show up in the sidebar and work on it individually! */}
+      {/* Template 1 — Kinetic Flux (high-energy, bold) */}
       <Composition
-        id="OnlyLogo"
-        component={Logo}
-        durationInFrames={150}
+        id="SocialAdV2-KineticFlux"
+        component={SocialAdV2}
+        durationInFrames={45 * 30}
         fps={30}
-        width={1920}
-        height={1080}
-        schema={myCompSchema2}
-        defaultProps={{
-          logoColor1: "#91dAE2" as const,
-          logoColor2: "#86A8E7" as const,
-        }}
+        width={1080}
+        height={1920}
+        schema={SocialAdSchema}
+        defaultProps={defaultProps}
+        calculateMetadata={calculateSocialAdMetadata}
+      />
+
+      {/* Template 2 — Story Glow (warm, emotional, storytelling) */}
+      <Composition
+        id="SocialAdV3-StoryGlow"
+        component={SocialAdV3}
+        durationInFrames={45 * 30}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={SocialAdSchema}
+        defaultProps={defaultProps}
+        calculateMetadata={calculateSocialAdMetadata}
+      />
+
+      <Composition
+        id="Exchat"
+        component={Exchat}
+        durationInFrames={45 * 30}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={SocialAdSchema}
+        defaultProps={defaultProps}
+        calculateMetadata={calculateSocialAdMetadata}
+      />
+
+      <Composition
+        id="Israel"
+        component={Exchat}
+        durationInFrames={45 * 30}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={SocialAdSchema}
+        defaultProps={defaultProps}
+        calculateMetadata={calculateSocialAdMetadata}
+      />
+
+      <Composition
+        id="ExcelCNAEditor"
+        component={ExcelCNAEditor}
+        durationInFrames={45 * 30}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={ExcelCNAEditorSchema}
+        defaultProps={excelCnaEditorInput}
+        calculateMetadata={calculateExcelCnaEditorMetadata}
       />
     </>
   );
