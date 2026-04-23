@@ -50,7 +50,9 @@ jobs:
 
       - name: Commit deployment manifest
         run: |
-          if git diff --quiet -- deployment/remotion-lambda.json; then
+          git status --short deployment/remotion-lambda.json
+
+          if git diff --quiet -- deployment/remotion-lambda.json && git diff --cached --quiet -- deployment/remotion-lambda.json && git ls-files --error-unmatch deployment/remotion-lambda.json >/dev/null 2>&1; then
             echo "Deployment manifest unchanged."
             exit 0
           fi
@@ -58,6 +60,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add deployment/remotion-lambda.json
+          if git diff --cached --quiet -- deployment/remotion-lambda.json; then
+            echo "No deployment manifest changes to commit."
+            exit 0
+          fi
           git commit -m "Update Remotion Lambda deployment manifest"
           git push
 
