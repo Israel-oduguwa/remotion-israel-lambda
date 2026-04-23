@@ -53,7 +53,7 @@ export const getLambdaConfig = async (overrides = {}) => {
       ),
       memorySizeInMb: toNumber(
         overrides.memorySizeInMb ?? process.env.REMOTION_FUNCTION_MEMORY_MB,
-        4096,
+        3008,
       ),
       diskSizeInMb: toNumber(
         overrides.diskSizeInMb ?? process.env.REMOTION_FUNCTION_DISK_MB,
