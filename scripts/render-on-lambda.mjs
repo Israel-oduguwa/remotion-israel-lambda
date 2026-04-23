@@ -36,8 +36,10 @@ const render = await renderMediaOnLambda({
   serveUrl: manifest.serveUrl,
   composition: "ExcelCNAEditor",
   inputProps: props,
+  forceBucketName: manifest.bucketName,
   ...renderDefaults,
   outName: {
+    bucketName: manifest.bucketName,
     key: `${
       payload.slug || `${props.adId}-${Date.now().toString(36)}`
     }.mp4`,

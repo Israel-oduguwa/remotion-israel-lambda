@@ -166,8 +166,10 @@ const renderExcelCnaEditorOnLambda = async (body) => {
     serveUrl: deployment.serveUrl,
     composition: "ExcelCNAEditor",
     inputProps: props,
+    forceBucketName: deployment.bucketName,
     ...renderDefaults,
     outName: {
+      bucketName: deployment.bucketName,
       key: `${outKeyBase}-${Date.now()}-${randomUUID().slice(0, 8)}.mp4`,
     },
     logLevel: "info",
