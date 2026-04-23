@@ -1,0 +1,261 @@
+[
+  {
+    "week_id": "manual-test",
+    "action_id": "A005",
+    "planner_context": {
+      "adId": "manual-test-A005",
+      "campaignId": "manual-test",
+      "actionType": "social_video_short",
+      "courseType": "bls",
+      "platform": "Instagram Reels / Facebook Reels / TikTok",
+      "siteBaseUrl": "https://www.excelcna.com",
+      "objective": "Traffic",
+      "audience": "Adults in Washington who are considering caregiving work and want a simple first step.",
+      "audienceInterest": "Starting a healthcare career without a long, expensive program",
+      "campaignAngle": "Practical entry into healthcare for career changers and family caregivers.",
+      "rationale": "A short video can make the offer feel real and approachable for adults who are unsure about training. It is especially useful after the core conversion path is tightened.",
+      "whyNow": "Short-form trust content can help adults understand the offer quickly once the landing page and search capture are in place.",
+      "requestedDurationSec": 50,
+      "minDurationSec": 50,
+      "maxDurationSec": 120,
+      "templateFamilyHint": "problem-solution",
+      "targetUrl": "https://www.excelcna.com/hca-training",
+      "ctaUrl": "https://www.excelcna.com/hca-training",
+      "brandSeed": {
+        "brandName": "ExcelCNA",
+        "logoUrl": "https://placehold.co/512x512/png?text=ExcelCNA",
+        "primaryColor": "#0E7490",
+        "secondaryColor": "#F59E0B",
+        "textColor": "#F8FAFC",
+        "accentColor": "#FDE68A",
+        "surfaceColor": "#08101F"
+      }
+    },
+    "slug": "clear-first-step-caregiving-washington-hca",
+    "video_title": "A Clear First Step Into Caregiving in Washington",
+    "target_url": "https://www.excelcna.com/hca/lp/searchers",
+    "dedupe_key": "manual-test-a005-hca-clear-first-step-problem-solution",
+    "bucket_name": "excelcna-images",
+    "gcs_base_url": "https://storage.googleapis.com",
+    "image_model": "gpt-image-1",
+    "scene_index": 1,
+    "scene_duration_seconds": 7,
+    "role": "hook",
+    "headline": "Start with the right training",
+    "supporting_text": "Washington adults often lose time by guessing the first step.",
+    "narration": "If you want to work in caregiving in Washington, do not guess your first step.",
+    "on_screen_text": "Do not guess",
+    "caption_text": "Want to work in caregiving in Washington? Start with the right first step.",
+    "badge_label": "Washington",
+    "badge_value": "Adult learners",
+    "preferred_source": "pexels",
+    "asset_choice_reason": "A realistic adult learner or caregiver-prep visual builds trust fast and supports a direct hook without looking salesy.",
+    "pexels_query": "adult woman thinking at laptop home study healthcare training vertical",
+    "fallback_image_prompt": "Realistic vertical photo of a Washington adult at a laptop, thoughtful and focused, planning a caregiving career at home, natural light, no text, no fake AI look",
+    "asset_notes": "Clean close-up, one person, neutral background, room for top and lower-third text.",
+    "gcs_object_name": "social-videos/clear-first-step-caregiving-washington-hca/scene-01.png",
+    "gcs_public_url": "https://storage.googleapis.com/excelcna-images/social-videos/clear-first-step-caregiving-washington-hca/scene-01.png",
+    "template_family": "problem-solution",
+    "opening_hook": "If you want to work in caregiving in Washington, do not guess your first step.",
+    "cta_line": "Tap to see the HCA training details and enroll when you're ready.",
+    "full_voiceover_script": "If you want to work in caregiving in Washington, do not guess your first step. A lot of adults get stuck because they are not sure what training they actually need, how online it is, or what it costs to begin. ExcelCNA offers DSHS-approved HCA training for adults who want a practical way to get started. The program is mostly online, which can make it easier to fit around work, family, or a career change. And if cost is what is stopping you, the starting payment is ninety-five dollars down. You are not trying to figure this out from random posts or outdated advice. You can look at the training details, see how the path works, and decide if it fits your next move. If caregiving is the direction you want, tap to view the HCA page and take the next step. Tap to see the HCA training details and enroll when you're ready.",
+    "tts_input_text": "If you want to work in caregiving in Washington, do not guess your first step. A lot of adults get stuck because they are not sure what training they actually need, how online it is, or what it costs to begin. ExcelCNA offers DSHS-approved HCA training for adults who want a practical way to get started. The program is mostly online, which can make it easier to fit around work, family, or a career change. And if cost is what is stopping you, the starting payment is ninety-five dollars down. You are not trying to figure this out from random posts or outdated advice. You can look at the training details, see how the path works, and decide if it fits your next move. If caregiving is the direction you want, tap to view the HCA page and take the next step. Tap to see the HCA training details and enroll when you're ready.",
+    "caption": "Thinking about caregiving work in Washington? This video breaks down a practical first step: DSHS-approved HCA training, mostly online, with a lower starting payment. See the details and decide if it fits your next move.",
+    "hashtags": [
+      "#WashingtonCaregiver",
+      "#HCATraining",
+      "#CaregivingCareer",
+      "#ExcelCNA",
+      "#WashingtonJobs",
+      "#HealthcareTraining",
+      "#CareerChange",
+      "#AdultLearners"
+    ],
+    "why_this_angle": "This angle reduces uncertainty first. Instead of pushing hype, it answers the real blockers for adult learners in Washington: what training to start with, whether it fits real life, and whether the upfront cost feels manageable.",
+    "scene_count": 7,
+    "target_duration_seconds": 67,
+    "brand_seed": {
+      "brandName": "ExcelCNA",
+      "logoUrl": "https://placehold.co/512x512/png?text=ExcelCNA",
+      "primaryColor": "#0E7490",
+      "secondaryColor": "#F59E0B",
+      "textColor": "#F8FAFC",
+      "accentColor": "#FDE68A",
+      "surfaceColor": "#08101F"
+    },
+    "generated_scene_count": 0,
+    "pexels_scene_count": 5,
+    "scenes": [
+      {
+        "scene_index": 1,
+        "scene_duration_seconds": 7,
+        "role": "hook",
+        "headline": "Start with the right training",
+        "supporting_text": "Washington adults often lose time by guessing the first step.",
+        "narration": "If you want to work in caregiving in Washington, do not guess your first step.",
+        "on_screen_text": "Do not guess",
+        "caption_text": "Want to work in caregiving in Washington? Start with the right first step.",
+        "badge_label": "Washington",
+        "badge_value": "Adult learners",
+        "scene_asset_url": "https://images.pexels.com/photos/5186396/pexels-photo-5186396.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "asset_credit_json": "{\"type\":\"pexels\",\"photo_page\":\"https://www.pexels.com/photo/a-woman-wearing-eyeglasses-while-holding-a-pen-5186396/\",\"photographer\":\"Nataliya Vaitkevich\",\"query\":\"adult woman thinking at laptop home study healthcare training vertical\",\"reason\":\"A realistic adult learner or caregiver-prep visual builds trust fast and supports a direct hook without looking salesy.\"}"
+      },
+      {
+        "scene_index": 2,
+        "scene_duration_seconds": 8,
+        "role": "pain",
+        "headline": "The hard part is uncertainty",
+        "supporting_text": "People hesitate when they do not know the training path, format, or cost.",
+        "narration": "A lot of adults get stuck because they are not sure what training they actually need, how online it is, or what it costs to begin.",
+        "on_screen_text": "Not sure where to start",
+        "caption_text": "The biggest blocker is not motivation. It is not knowing the path.",
+        "badge_label": "Common blocker",
+        "badge_value": "Unclear next step",
+        "scene_asset_url": "https://images.pexels.com/photos/6975209/pexels-photo-6975209.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "asset_credit_json": "{\"type\":\"pexels\",\"photo_page\":\"https://www.pexels.com/photo/close-up-shot-of-an-elderly-man-with-eyeglasses-looking-at-the-paper-6975209/\",\"photographer\":\"T Leish\",\"query\":\"adult man reviewing paperwork laptop stressed studying at kitchen table vertical\",\"reason\":\"Stock can clearly show adult overwhelm and decision fatigue in a realistic way without needing custom imagery.\"}"
+      },
+      {
+        "scene_index": 3,
+        "scene_duration_seconds": 9,
+        "role": "solution",
+        "headline": "There is a practical starting path",
+        "supporting_text": "ExcelCNA offers DSHS-approved HCA training for adults entering caregiving.",
+        "narration": "ExcelCNA offers DSHS-approved HCA training for adults who want a practical way to get started.",
+        "on_screen_text": "DSHS-approved HCA",
+        "caption_text": "A clear training path matters when you are starting fresh.",
+        "badge_label": "Program type",
+        "badge_value": "HCA training",
+        "scene_asset_url": "https://images.pexels.com/photos/36380795/pexels-photo-36380795.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "asset_credit_json": "{\"type\":\"pexels\",\"photo_page\":\"https://www.pexels.com/photo/medical-training-session-in-brazilian-classroom-36380795/\",\"photographer\":\"Guilhemro\",\"query\":\"healthcare training classroom adult students instructor vertical\",\"reason\":\"A classroom or instruction setting is easy to communicate with realistic stock and reinforces legitimacy.\"}"
+      },
+      {
+        "scene_index": 4,
+        "scene_duration_seconds": 8,
+        "role": "offer",
+        "headline": "Built for real schedules",
+        "supporting_text": "Mostly online training can be easier to fit around work and family.",
+        "narration": "The program is mostly online, which can make it easier to fit around work, family, or a career change.",
+        "on_screen_text": "Mostly online",
+        "caption_text": "Mostly online can make training more doable for busy adults.",
+        "badge_label": "Format",
+        "badge_value": "Mostly online",
+        "scene_asset_url": "https://images.pexels.com/photos/4841639/pexels-photo-4841639.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "asset_credit_json": "{\"type\":\"pexels\",\"photo_page\":\"https://www.pexels.com/photo/a-male-student-in-green-long-sleeves-using-a-laptop-on-a-wooden-desk-4841639/\",\"photographer\":\"Tima Miroshnichenko\",\"query\":\"adult studying online laptop home desk vertical\",\"reason\":\"Pexels can show adults learning on laptops in believable home environments, which supports schedule flexibility.\"}"
+      },
+      {
+        "scene_index": 7,
+        "scene_duration_seconds": 22,
+        "role": "cta",
+        "headline": "Check the HCA page",
+        "supporting_text": "Review the details and enroll when it makes sense for you.",
+        "narration": "If caregiving is the direction you want, tap to view the HCA page and take the next step.",
+        "on_screen_text": "View HCA details",
+        "caption_text": "Tap to see the HCA training details and decide if it fits your path.",
+        "badge_label": "Next step",
+        "badge_value": "Tap to learn more",
+        "scene_asset_url": "https://images.pexels.com/photos/15692686/pexels-photo-15692686.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "asset_credit_json": "{\"type\":\"pexels\",\"photo_page\":\"https://www.pexels.com/photo/woman-sitting-on-the-desk-and-using-a-smart-phone-15692686/\",\"photographer\":\"Bruno Miranda Photography\",\"query\":\"adult using phone smiling at desk vertical\",\"reason\":\"A confident adult taking action on a phone creates a natural close and keeps the CTA human.\"}"
+      }
+    ],
+    "voiceover_url": "https://storage.googleapis.com/excelcna-images/social-videos/clear-first-step-caregiving-washington-hca/voiceover.mp3",
+    "remotion_payload": {
+      "adId": "manual-test-A005",
+      "campaignId": "manual-test",
+      "templateFamily": "problem-solution",
+      "brandName": "ExcelCNA",
+      "ctaLabel": "Tap to see the HCA training details and enroll when you're ready.",
+      "ctaUrl": "https://www.excelcna.com/hca/lp/searchers",
+      "trackingSlug": "clear-first-step-caregiving-washington-hca",
+      "aspectRatio": "9:16",
+      "logoUrl": "https://placehold.co/512x512/png?text=ExcelCNA",
+      "primaryColor": "#0E7490",
+      "secondaryColor": "#F59E0B",
+      "textColor": "#F8FAFC",
+      "accentColor": "#FDE68A",
+      "surfaceColor": "#08101F",
+      "voiceoverUrl": "https://storage.googleapis.com/excelcna-images/social-videos/clear-first-step-caregiving-washington-hca/voiceover.mp3",
+      "targetDurationSec": 67,
+      "scenes": [
+        {
+          "id": "scene-01",
+          "role": "hook",
+          "headline": "Start with the right training",
+          "supportingText": "Washington adults often lose time by guessing the first step.",
+          "badgeLabel": "Washington",
+          "badgeValue": "Adult learners",
+          "mediaUrl": "https://images.pexels.com/photos/5186396/pexels-photo-5186396.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "mediaType": "image",
+          "captionText": "Want to work in caregiving in Washington? Start with the right first step."
+        },
+        {
+          "id": "scene-02",
+          "role": "pain",
+          "headline": "The hard part is uncertainty",
+          "supportingText": "People hesitate when they do not know the training path, format, or cost.",
+          "badgeLabel": "Common blocker",
+          "badgeValue": "Unclear next step",
+          "mediaUrl": "https://images.pexels.com/photos/6975209/pexels-photo-6975209.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "mediaType": "image",
+          "captionText": "The biggest blocker is not motivation. It is not knowing the path."
+        },
+        {
+          "id": "scene-03",
+          "role": "solution",
+          "headline": "There is a practical starting path",
+          "supportingText": "ExcelCNA offers DSHS-approved HCA training for adults entering caregiving.",
+          "badgeLabel": "Program type",
+          "badgeValue": "HCA training",
+          "mediaUrl": "https://images.pexels.com/photos/36380795/pexels-photo-36380795.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "mediaType": "image",
+          "captionText": "A clear training path matters when you are starting fresh."
+        },
+        {
+          "id": "scene-04",
+          "role": "offer",
+          "headline": "Built for real schedules",
+          "supportingText": "Mostly online training can be easier to fit around work and family.",
+          "badgeLabel": "Format",
+          "badgeValue": "Mostly online",
+          "mediaUrl": "https://images.pexels.com/photos/4841639/pexels-photo-4841639.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "mediaType": "image",
+          "captionText": "Mostly online can make training more doable for busy adults."
+        },
+        {
+          "id": "scene-07",
+          "role": "cta",
+          "headline": "Check the HCA page",
+          "supportingText": "Review the details and enroll when it makes sense for you.",
+          "badgeLabel": "Next step",
+          "badgeValue": "Tap to learn more",
+          "mediaUrl": "https://images.pexels.com/photos/15692686/pexels-photo-15692686.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "mediaType": "image",
+          "captionText": "Tap to see the HCA training details and decide if it fits your path."
+        }
+      ],
+      "captions": {
+        "phrases": [
+          {
+            "sceneId": "scene-01",
+            "text": "Want to work in caregiving in Washington? Start with the right first step."
+          },
+          {
+            "sceneId": "scene-02",
+            "text": "The biggest blocker is not motivation. It is not knowing the path."
+          },
+          {
+            "sceneId": "scene-03",
+            "text": "A clear training path matters when you are starting fresh."
+          },
+          {
+            "sceneId": "scene-04",
+            "text": "Mostly online can make training more doable for busy adults."
+          },
+          {
+            "sceneId": "scene-07",
+            "text": "Tap to see the HCA training details and decide if it fits your path."
+          }
+        ]
+      }
+    }
+  }
+]

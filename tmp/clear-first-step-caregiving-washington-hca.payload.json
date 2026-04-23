@@ -1,0 +1,99 @@
+{
+  "adId": "manual-test-A005",
+  "campaignId": "manual-test",
+  "templateFamily": "problem-solution",
+  "brandName": "ExcelCNA",
+  "ctaLabel": "Tap to see the HCA training details and enroll when you're ready.",
+  "ctaUrl": "https://www.excelcna.com/hca/lp/searchers",
+  "trackingSlug": "clear-first-step-caregiving-washington-hca",
+  "aspectRatio": "9:16",
+  "logoUrl": "https://placehold.co/512x512/png?text=ExcelCNA",
+  "primaryColor": "#0E7490",
+  "secondaryColor": "#F59E0B",
+  "textColor": "#F8FAFC",
+  "accentColor": "#FDE68A",
+  "surfaceColor": "#08101F",
+  "voiceoverUrl": "https://storage.googleapis.com/excelcna-images/social-videos/clear-first-step-caregiving-washington-hca/voiceover.mp3",
+  "targetDurationSec": 54,
+  "scenes": [
+    {
+      "id": "scene-01",
+      "role": "hook",
+      "headline": "Start with the right training",
+      "supportingText": "Washington adults often lose time by guessing the first step.",
+      "badgeLabel": "Washington",
+      "badgeValue": "Adult learners",
+      "mediaUrl": "https://images.pexels.com/photos/5186396/pexels-photo-5186396.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "mediaType": "image",
+      "captionText": "Want to work in caregiving in Washington? Start with the right first step."
+    },
+    {
+      "id": "scene-02",
+      "role": "pain",
+      "headline": "The hard part is uncertainty",
+      "supportingText": "People hesitate when they do not know the training path, format, or cost.",
+      "badgeLabel": "Common blocker",
+      "badgeValue": "Unclear next step",
+      "mediaUrl": "https://images.pexels.com/photos/6975209/pexels-photo-6975209.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "mediaType": "image",
+      "captionText": "The biggest blocker is not motivation. It is not knowing the path."
+    },
+    {
+      "id": "scene-03",
+      "role": "solution",
+      "headline": "There is a practical starting path",
+      "supportingText": "ExcelCNA offers DSHS-approved HCA training for adults entering caregiving.",
+      "badgeLabel": "Program type",
+      "badgeValue": "HCA training",
+      "mediaUrl": "https://images.pexels.com/photos/36380795/pexels-photo-36380795.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "mediaType": "image",
+      "captionText": "A clear training path matters when you are starting fresh."
+    },
+    {
+      "id": "scene-04",
+      "role": "proof",
+      "headline": "Built for real schedules",
+      "supportingText": "Mostly online training can be easier to fit around work and family.",
+      "badgeLabel": "Format",
+      "badgeValue": "Mostly online",
+      "mediaUrl": "https://images.pexels.com/photos/4841639/pexels-photo-4841639.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "mediaType": "image",
+      "captionText": "Mostly online can make training more doable for busy adults."
+    },
+    {
+      "id": "scene-05",
+      "role": "cta",
+      "headline": "Check the HCA page",
+      "supportingText": "Review the details and enroll when it makes sense for you.",
+      "badgeLabel": "Next step",
+      "badgeValue": "Tap to learn more",
+      "mediaUrl": "https://images.pexels.com/photos/15692686/pexels-photo-15692686.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "mediaType": "image",
+      "captionText": "Tap to see the HCA training details and decide if it fits your path."
+    }
+  ],
+  "captions": {
+    "phrases": [
+      {
+        "sceneId": "scene-01",
+        "text": "Want to work in caregiving in Washington? Start with the right first step."
+      },
+      {
+        "sceneId": "scene-02",
+        "text": "The biggest blocker is not motivation. It is not knowing the path."
+      },
+      {
+        "sceneId": "scene-03",
+        "text": "A clear training path matters when you are starting fresh."
+      },
+      {
+        "sceneId": "scene-04",
+        "text": "Mostly online can make training more doable for busy adults."
+      },
+      {
+        "sceneId": "scene-05",
+        "text": "Tap to see the HCA training details and decide if it fits your path."
+      }
+    ]
+  }
+}

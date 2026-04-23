@@ -1,0 +1,1388 @@
+{
+  "name": "ExcelCNA Remotion Social Video Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const incoming = items && items.length ? (items[0].json || {}) : {};\nconst raw = incoming.body && Object.keys(incoming.body || {}).length ? incoming.body : incoming;\nconst sample = [{\n  week_id: 'manual-test',\n  action_id: 'A005',\n  action_type: 'social_video_short',\n  priority: 5,\n  title: 'What to Expect in HCA Training',\n  rationale: 'A short trust-building video can help adults understand the format, reduce hesitation, and reinforce the practical value of the HCA program without relying on hype.',\n  agent_reasoning: 'Weekly paid volume is extremely low, so the highest-leverage move is to capture active intent first with Google Search Ads, then reduce friction on the main landing page, then build intent-based SEO assets, and add one short-form trust video to support future conversion.',\n  skills_applied: [\n    'Prioritize high-intent search capture when weekly payments are low',\n    'Use short-form trust content as a supporting channel',\n    'Write for adults with clear, grounded language and direct CTAs',\n    'Use Washington-specific local trust framing where it improves credibility'\n  ],\n  details: {\n    cta_destination: '/hca/lp/searchers',\n    landing_page: '/hca/lp/searchers',\n    platform: 'Instagram Reels / Facebook Reels / TikTok',\n    hook_line: 'Thinking about caregiving work in Washington? Here is what HCA training looks like.',\n    video_concept: 'A 50-65 second walkthrough showing the training context, simple course structure, and the $95 down start point.',\n    key_message: 'HCA is a practical first step into caregiving, and ExcelCNA makes it clear, local, and affordable to begin.',\n    cta: 'Start HCA Training',\n    estimated_duration_seconds: 58,\n    visual_direction: 'Show the classroom or training environment, close-up on course materials, and clean on-screen text overlays.',\n    campaign_angle: 'Practical local trust content for adults considering a caregiving career.',\n    objective: 'Build trust and drive HCA clicks',\n    audience_description: 'Career changers and family caregivers in Washington who want a straightforward entry into healthcare work.',\n    audience: 'Adults 22-55 in Washington State',\n    body_angle: '',\n    key_points: [\n      'State that HCA is a starting path into caregiving',\n      'Show the mostly online format',\n      'Mention DSHS-approved training',\n      'Mention $95 down / $350 total',\n      'End with a direct enrollment CTA'\n    ],\n    audience_interest: 'Affordable caregiving training, clear next steps, local trust',\n    video_title: 'What HCA Training Looks Like at ExcelCNA',\n    hook_first_5_seconds: 'Thinking about caregiving work in Washington? Here is what HCA training looks like.',\n    main_content_outline: [\n      'Opening hook on caregiving as a practical career start',\n      'Quick visual of training materials and setting',\n      'On-screen text: DSHS-approved, mostly online',\n      'On-screen text: $95 down, $350 total',\n      'Close with enrollment CTA'\n    ],\n    thumbnail_concept: 'Instructor or training room shot with bold text: HCA Training in Washington',\n    why_now: 'Short-form video can quickly communicate the offer in plain language and support trust for an audience that needs clarity before paying.'\n  },\n  google_sheet_document_id: '1u291IYc0dWz6a49_CVicjeD1RT0lG5lIbmRrR3Vsogc',\n  google_sheet_sheet_name: 'SocialVideos',\n  bucket_name: 'excelcna-images',\n  site_base_url: 'https://www.excelcna.com',\n  remotion_render_api_url: ''\n}];\nconst payload = Array.isArray(raw) ? raw[0] : raw;\nconst p = Object.keys(payload || {}).length ? payload : sample[0];\nconst d = p.details || {};\nconst toStr = (value, fallback = '') => typeof value === 'string' ? value.trim() : fallback;\nconst normalizeList = (value) => Array.isArray(value) ? value.filter(Boolean) : [];\nconst siteBaseUrl = toStr(p.site_base_url, 'https://www.excelcna.com');\nconst minDuration = 50;\nconst maxDuration = 120;\nconst requested = Number(d.estimated_duration_seconds || p.estimated_duration_seconds || 0) || 0;\nconst requestedDuration = requested ? Math.max(minDuration, Math.min(maxDuration, requested)) : 60;\nconst relativeOrAbsoluteToUrl = (value) => {\n  const v = toStr(value);\n  if (!v) return '';\n  if (v.startsWith('http://') || v.startsWith('https://')) return v;\n  if (v.startsWith('/')) return `${siteBaseUrl}${v}`;\n  return `${siteBaseUrl}/${v}`;\n};\nconst courseUrlMap = {\n  hca: 'https://www.excelcna.com/hca/lp/searchers',\n  cpr: 'https://www.excelcna.com/cpr-bls',\n  bls: 'https://www.excelcna.com/cpr-bls/bls/register?mode=blended'\n};\nconst detectCourseType = () => {\n  const combined = [\n    p.title,\n    p.rationale,\n    p.agent_reasoning,\n    d.video_title,\n    d.hook_line,\n    d.video_concept,\n    d.key_message,\n    d.campaign_angle,\n    ...normalizeList(d.key_points),\n    ...normalizeList(d.main_content_outline)\n  ].join(' ').toLowerCase();\n  if (combined.includes('bls')) return 'bls';\n  if (combined.includes('cpr') || combined.includes('first aid') || combined.includes('aed')) return 'cpr';\n  if (combined.includes('hca') || combined.includes('caregiving') || combined.includes('home care aide')) return 'hca';\n  return 'unknown';\n};\nconst courseType = detectCourseType();\nconst sourceTarget = toStr(d.target_page) || toStr(d.landing_page) || toStr(d.cta_destination);\nconst resolvedTargetUrl = relativeOrAbsoluteToUrl(sourceTarget) || courseUrlMap[courseType] || siteBaseUrl;\nconst chooseTemplateFamilyHint = () => {\n  const combined = [d.campaign_angle || '', d.video_concept || '', d.visual_direction || '', d.creative_direction || '', p.rationale || ''].join(' ').toLowerCase();\n  if (combined.includes('testimonial') || combined.includes('story')) return 'story/testimonial';\n  if (combined.includes('explain') || combined.includes('clarity') || combined.includes('walkthrough') || combined.includes('practical')) return 'problem-solution';\n  return 'proof-driven';\n};\nconst skillMarkdown = `---\nname: excelcna-remotion-video-planner-rules\nversion: \"5.0.0\"\n---\n\n# ExcelCNA Remotion Social Video Rules\n\n## Goal\nCreate clean, dynamic, short-form vertical videos for ExcelCNA that make Washington adults stop scrolling, trust the offer quickly, and click through to the correct landing page.\n\n## Critical planning rule\nThe acquisition payload is the source idea, not the final creative.\nDo not blindly reuse its title, hook, CTA, key points, or duration.\nUse it as strategic input, then choose the best video decisions.\n\n## Planner responsibilities\nThe planner must decide:\n- final video title\n- final hook\n- final CTA line\n- final duration\n- final scene structure\n- final scene roles\n- final template family\n- whether each scene should use pexels or generated_image\n- what factual claims are relevant to the actual offer\n\n## Offer routing\nChoose the landing page based on the actual offer:\n- HCA: https://www.excelcna.com/hca/lp/searchers\n- CPR: https://www.excelcna.com/cpr-bls\n- BLS: https://www.excelcna.com/cpr-bls/bls/register?mode=blended\n\n## Tone\n- Plainspoken\n- Practical\n- Trust-first\n- Adult\n- Local\n- Clear\n- No hype\n- No fake urgency\n- No guru language\n\n## Visual direction\n- Keep the video clean\n- Prefer realistic training, classroom, study, instructor, certification, or healthcare-learning visuals\n- Avoid clutter\n- Avoid meme editing\n- Avoid fake AI humans\n- Avoid text baked into images\n- Avoid unrealistic hospital scenes\n- Avoid low-trust imagery\n\n## Structure\n- Final duration must be between ${minDuration} and ${maxDuration} seconds\n- Choose duration from message complexity, not habit\n- Usually 4 to 8 scenes, but only if each scene earns its place\n- Each scene must communicate one idea only\n- Each scene must have one role, one visual idea, one narration block, and one short on-screen text line\n- Scene durations should usually stay between 4 and 12 seconds\n- Total duration must equal the sum of scene durations\n- Include at least one hook scene and one cta scene\n- Use only these roles: hook, pain, solution, proof, offer, cta\n\n## Text rules\n- The opening hook must work visually and verbally in the first 3 seconds\n- Headline should usually stay under 12 words\n- Supporting text should usually stay under 22 words\n- On-screen text should usually stay under 7 words\n- Caption text should be easy to split into phrase captions later\n- Voiceover must sound natural when spoken by a calm human narrator\n- Avoid dense paragraphs and stacked claims\n\n## Asset sourcing rules\n- Prefer Pexels first for realism, adults, classrooms, caregiving, laptops, certification, and training environments\n- Use generated_image only when stock cannot clearly show the exact concept\n- Every scene must justify its asset choice\n- If preferred_source is pexels, include a useful search query\n- If preferred_source is generated_image, include a strong fallback image prompt\n\n## Remotion packaging rules\n- The output must map cleanly into a Remotion payload later\n- Choose one template family intentionally:\n  - proof-driven\n  - problem-solution\n  - story/testimonial\n- Keep scene text layout-safe for a clean 9:16 composition\n\n## Output rules\nReturn strict JSON only.\nReturn production-usable output, not a draft.`;\nreturn [{ json: {\n  source_payload: p,\n  week_id: toStr(p.week_id, 'manual-test'),\n  action_id: toStr(p.action_id, 'A005'),\n  action_type: toStr(p.action_type, 'social_video_short'),\n  priority: Number(p.priority || 5),\n  acquisition_summary: {\n    title: toStr(p.title),\n    rationale: toStr(p.rationale),\n    agent_reasoning: toStr(p.agent_reasoning),\n    skills_applied: Array.isArray(p.skills_applied) ? p.skills_applied : [],\n    objective: toStr(d.objective),\n    campaign_angle: toStr(d.campaign_angle),\n    audience_description: toStr(d.audience_description || d.audience),\n    audience_interest: toStr(d.audience_interest),\n    platform: toStr(d.platform),\n    visual_direction: toStr(d.visual_direction || d.creative_direction),\n    why_now: toStr(d.why_now),\n    title_hint: toStr(d.video_title || p.title),\n    hook_hint: toStr(d.hook_first_5_seconds || d.hook_line || d.hook),\n    key_message_hint: toStr(d.key_message),\n    concept_hint: toStr(d.video_concept),\n    body_angle_hint: toStr(d.body_angle),\n    key_points_hint: normalizeList(d.key_points),\n    outline_hint: normalizeList(d.main_content_outline),\n    thumbnail_hint: toStr(d.thumbnail_concept)\n  },\n  routing: {\n    detected_course_type: courseType,\n    source_target_page: toStr(d.target_page),\n    source_landing_page: toStr(d.landing_page),\n    source_cta_destination: toStr(d.cta_destination),\n    resolved_target_url: resolvedTargetUrl\n  },\n  planner_context: {\n    adId: `${toStr(p.week_id, 'manual-test')}-${toStr(p.action_id, 'A005')}`,\n    campaignId: toStr(p.week_id, 'manual-test'),\n    actionType: toStr(p.action_type, 'social_video_short'),\n    courseType,\n    platform: toStr(d.platform, 'Instagram Reels / Facebook Reels / TikTok'),\n    siteBaseUrl,\n    objective: toStr(d.objective),\n    audience: toStr(d.audience_description || d.audience),\n    audienceInterest: toStr(d.audience_interest),\n    campaignAngle: toStr(d.campaign_angle),\n    rationale: toStr(p.rationale),\n    whyNow: toStr(d.why_now || p.agent_reasoning),\n    requestedDurationSec: requestedDuration,\n    minDurationSec: minDuration,\n    maxDurationSec: maxDuration,\n    templateFamilyHint: chooseTemplateFamilyHint(),\n    targetUrl: resolvedTargetUrl,\n    ctaUrl: resolvedTargetUrl,\n    brandSeed: {\n      brandName: toStr(p.brand_name, 'ExcelCNA'),\n      logoUrl: toStr(p.brand_logo_url || d.brand_logo_url, 'https://placehold.co/512x512/png?text=ExcelCNA'),\n      primaryColor: toStr(p.primary_color, '#0E7490'),\n      secondaryColor: toStr(p.secondary_color, '#F59E0B'),\n      textColor: toStr(p.text_color, '#F8FAFC'),\n      accentColor: toStr(p.accent_color, '#FDE68A'),\n      surfaceColor: toStr(p.surface_color, '#08101F')\n    }\n  },\n  google_sheet_document_id: toStr(p.google_sheet_document_id, '1u291IYc0dWz6a49_CVicjeD1RT0lG5lIbmRrR3Vsogc'),\n  google_sheet_sheet_name: toStr(p.google_sheet_sheet_name, 'SocialVideos'),\n  google_sheet_url: 'https://docs.google.com/spreadsheets/d/1u291IYc0dWz6a49_CVicjeD1RT0lG5lIbmRrR3Vsogc/edit?gid=0#gid=0',\n  bucket_name: toStr(p.bucket_name, 'excelcna-images'),\n  site_base_url: siteBaseUrl,\n  gcs_base_url: 'https://storage.googleapis.com',\n  pexels_api_base: 'https://api.pexels.com/v1/search',\n  openai_api_base: 'https://api.openai.com/v1',\n  planning_model: toStr(p.planning_model, 'gpt-5.4-2026-03-05'),\n  image_model: toStr(p.image_model, 'gpt-image-1'),\n  tts_model: 'gpt-4o-mini-tts',\n  tts_voice: toStr(p.tts_voice, 'ash'),\n  tts_speed: Number(p.tts_speed || 0.96),\n  min_duration_seconds: minDuration,\n  max_duration_seconds: maxDuration,\n  requested_duration_seconds: requestedDuration,\n  min_total_scenes: 4,\n  max_total_scenes: 8,\n  social_skill_markdown: skillMarkdown,\n  remotion_render_api_url: toStr(p.remotion_render_api_url || incoming.remotion_render_api_url),\n  created_at_iso: new Date().toISOString()\n}}];"
+      },
+      "id": "4f6577da-c114-4dbf-91d4-6cb20b3cc001",
+      "name": "Normalize Social Payload Remotion",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "=1u291IYc0dWz6a49_CVicjeD1RT0lG5lIbmRrR3Vsogc",
+          "mode": ""
+        },
+        "sheetName": "={{ $json.google_sheet_sheet_name }}",
+        "options": {}
+      },
+      "id": "45249ecf-80ee-4627-878a-22db8563bb8e",
+      "name": "Get Existing Video Log",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1620,
+        540
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "fiSel98a0BR5HcO5",
+          "name": "Google Sheets account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const normalizeText = (value) => String(value || '').toLowerCase().replace(/\\s+/g, ' ').trim();\nconst cfgNode = $('Normalize Social Payload Remotion').first();\nif (!cfgNode || !cfgNode.json) throw new Error('Missing Normalize Social Payload Remotion output');\nconst cfg = cfgNode.json;\nconst rows = items.map((i) => i.json || {}).filter((r) => {\n  if (r.error) return false;\n  const title = r.video_title || r.title || '';\n  const hook = r.hook_line || r.hook || '';\n  const targetPage = r.target_page || r.target_url || '';\n  return Boolean(title || hook || targetPage);\n});\nconst library = rows.slice(-500).map((r) => {\n  const title = String(r.video_title || r.title || '').trim();\n  const hook = String(r.hook_line || r.hook || '').trim();\n  const target_page = String(r.target_page || r.target_url || '').trim();\n  const status = String(r.status || '').trim();\n  const notes = String(r.notes || '').trim();\n  const dedupe_key = String(r.dedupe_key || '').trim() || [normalizeText(title), normalizeText(hook), normalizeText(target_page)].filter(Boolean).join(' | ');\n  return { title, hook, dedupe_key, target_page, status, notes };\n});\nconst plannerLibrary = library.filter((r) => r.status !== 'failed').slice(-80);\nreturn [{ json: { ...cfg, existing_video_library: library, existing_video_library_text: JSON.stringify(plannerLibrary, null, 2), existing_video_count: library.length } }];"
+      },
+      "id": "cab1d90d-7763-4f99-8ff2-bfc93bdff0f8",
+      "name": "Build Existing Video Library",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1840,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = items[0].json;\nconst prompt = `You are the social video planning brain for ExcelCNA.\n\nUse these operating rules:\n${j.social_skill_markdown}\n\nSOURCE PAYLOAD:\n${JSON.stringify(j.source_payload, null, 2)}\n\nACQUISITION SUMMARY:\n${JSON.stringify(j.acquisition_summary, null, 2)}\n\nROUTING CONTEXT:\n${JSON.stringify(j.routing, null, 2)}\n\nPLANNER CONTEXT:\n${JSON.stringify(j.planner_context, null, 2)}\n\nEXISTING VIDEO LOG\nAvoid repeating the same promise, title, hook, CTA framing, target-page angle, or scene pattern.\n${j.existing_video_library_text || '[]'}\n\nTASK:\nCreate one high-performing short-form social video plan for the acquisition idea.\n\nCORE PLANNING RULES:\n- Treat the acquisition payload as strategy input, not final creative.\n- Do not blindly reuse the acquisition title, hook, CTA, key points, or outline.\n- Decide the best final title, hook, CTA, scene flow, duration, and visual plan from the idea.\n- Match the landing page and CTA to the actual offer.\n- Use the resolved target URL as the conversion destination unless there is a very strong strategic reason not to.\n- Keep the video clean, practical, trust-first, and mobile-first.\n- Avoid repetitive structures that look like previous videos.\n\nDURATION RULES:\n- Final duration must be between ${j.planner_context.minDurationSec} and ${j.planner_context.maxDurationSec} seconds.\n- Choose duration based on message complexity, not habit.\n- Shorter is acceptable if the idea is simple.\n- Longer is acceptable only if every scene earns its place.\n- The total duration must equal the sum of all scene durations.\n\nSCENE RULES:\n- Use as few scenes as needed for clarity and attention.\n- Usually use ${j.min_total_scenes} to ${j.max_total_scenes} scenes unless the concept strongly needs more.\n- Each scene must communicate only one core idea.\n- Each scene must map cleanly to one Remotion scene.\n- Each scene must have one role, one visual idea, one narration block, and one short on-screen text line.\n- Scene durations should usually stay between 4 and 12 seconds.\n- Include at least one hook scene and one cta scene.\n- Use only these roles: hook, pain, solution, proof, offer, cta.\n\nTEXT RULES:\n- The opening hook must work visually and verbally in the first 3 seconds.\n- The voiceover must sound natural when spoken by a calm human narrator.\n- Headline should usually stay under 12 words.\n- Supporting text should usually stay under 22 words.\n- On-screen text should usually stay under 7 words.\n- Caption text should be easy to read and easy to split into phrase captions later.\n- Avoid dense paragraphs, stacked claims, and cluttered wording.\n\nFACT RULES:\n- Use concrete facts only when relevant to the actual offer.\n- Do not force HCA facts into CPR or BLS videos.\n- If the offer is HCA, facts like 75 hours, mostly online, DSHS-approved, and $95 down may be used when strategically helpful.\n- Only include factual claims that fit the source idea and target offer.\n\nASSET RULES:\n- Prefer Pexels for realism, adults, classrooms, laptops, certification, caregiving, healthcare-training, and trust-building environments.\n- Use generated_image only when stock will not clearly communicate the exact scene concept.\n- Every scene must justify its asset choice.\n- If preferred_source is pexels, provide a useful search query.\n- If preferred_source is generated_image, provide a strong fallback image prompt anyway.\n- Avoid fake AI humans, unrealistic hospitals, baked-in text, cluttered scenes, and low-trust imagery.\n\nREMOTION PACKAGING RULES:\n- Choose one template family intentionally: proof-driven, problem-solution, or story/testimonial.\n- The chosen family should match the narrative style of the idea.\n- The output must be easy to convert into a Remotion payload later.\n- Keep scene text layout-safe for a clean vertical composition.\n\nOUTPUT REQUIREMENTS:\n- Return only valid JSON.\n- No markdown.\n- No explanation outside JSON.\n\nJSON SCHEMA:\n{\n  \"video_title\": \"string\",\n  \"slug\": \"string\",\n  \"template_family\": \"proof-driven | problem-solution | story/testimonial\",\n  \"target_duration_seconds\": number,\n  \"platforms\": [\"string\"],\n  \"target_url\": \"string\",\n  \"voice_style\": \"string\",\n  \"opening_hook\": \"string\",\n  \"cta_line\": \"string\",\n  \"full_voiceover_script\": \"string\",\n  \"caption\": \"string\",\n  \"hashtags\": [\"string\"],\n  \"why_this_angle\": \"string\",\n  \"dedupe_key\": \"string\",\n  \"scene_plan\": [\n    {\n      \"scene_index\": number,\n      \"role\": \"hook | pain | solution | proof | offer | cta\",\n      \"duration_seconds\": number,\n      \"headline\": \"string\",\n      \"supporting_text\": \"string\",\n      \"narration\": \"string\",\n      \"on_screen_text\": \"string\",\n      \"preferred_source\": \"pexels | generated_image\",\n      \"asset_choice_reason\": \"string\",\n      \"pexels_query\": \"string\",\n      \"fallback_image_prompt\": \"string\",\n      \"asset_notes\": \"string\",\n      \"caption_text\": \"string\",\n      \"badge_label\": \"string\",\n      \"badge_value\": \"string\"\n    }\n  ]\n}\n\nVALIDATION RULES:\n- scene_plan must not be empty\n- scene_index values must be sequential starting at 1\n- target_duration_seconds must equal the sum of all scene duration_seconds\n- every scene must use one of the allowed roles\n- every scene must include narration, on_screen_text, preferred_source, and caption_text\n- output must be production-usable, not a draft`;\nreturn [{ json: { ...j, planning_prompt: prompt } }];"
+      },
+      "id": "1135e870-9d31-4b8f-9550-f1cefeb0fa9b",
+      "name": "Prepare Social Plan Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2060,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.planning_prompt }}",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "id": "b55f2432-6643-46ed-8454-56dff8eea82d",
+      "name": "Social Video Planning Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        2280,
+        500
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4-2026-03-05",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4-2026-03-05"
+        },
+        "options": {}
+      },
+      "id": "940f6fea-20bf-4f47-a1a5-43b8a95e84fa",
+      "name": "GPT-5.4 Social Planner Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2200,
+        760
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "TUDXtY3eG3EKPc8O",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "d33818ea-e624-40e0-b3e7-bf1e2a6fbffb",
+      "name": "Social Plan Auto-fixing Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"social_video_plan\": {\n    \"video_title\": \"What HCA Training in Washington Actually Looks Like\",\n    \"slug\": \"what-hca-training-in-washington-actually-looks-like\",\n    \"template_family\": \"problem-solution\",\n    \"target_duration_seconds\": 64,\n    \"platforms\": [\n      \"instagram_reels\",\n      \"facebook_reels\",\n      \"tiktok\"\n    ],\n    \"target_url\": \"https://www.excelcna.com/hca/lp/searchers\",\n    \"voice_style\": \"warm, practical, credible, calm, adult\",\n    \"opening_hook\": \"Thinking about caregiving work in Washington? Here is what HCA training actually looks like.\",\n    \"cta_line\": \"Tap through to ExcelCNA and see the HCA training page to get started.\",\n    \"full_voiceover_script\": \"Thinking about caregiving work in Washington? Here is what HCA training actually looks like. If you want a practical first step into caregiving, HCA training is one of the clearest places to start. ExcelCNA offers DSHS-approved HCA training that is mostly online, so it fits better around work and family responsibilities. The full path is 75 hours, and you can start with a $95 down payment instead of feeling like you need everything figured out at once. This training is a strong fit for adults who want a realistic healthcare entry point and a clear next step. If that sounds like you, tap through to ExcelCNA and view the HCA training page today.\",\n    \"caption\": \"A clear, practical look at what HCA training in Washington actually looks like and how to get started with ExcelCNA.\",\n    \"hashtags\": [\n      \"#HCATraining\",\n      \"#WashingtonCareers\",\n      \"#CaregiverTraining\",\n      \"#CareerChange\",\n      \"#ExcelCNA\"\n    ],\n    \"why_this_angle\": \"This angle reduces uncertainty by showing what the training looks like, who it is for, and how simple the first step can be.\",\n    \"dedupe_key\": \"what-hca-training-in-washington-actually-looks-like-thinking-about-caregiving-work-in-washington\",\n    \"scene_plan\": [\n      {\n        \"scene_index\": 1,\n        \"role\": \"hook\",\n        \"duration_seconds\": 8,\n        \"headline\": \"What HCA training looks like\",\n        \"supporting_text\": \"A practical first look at the program.\",\n        \"narration\": \"Thinking about caregiving work in Washington? Here is what HCA training actually looks like.\",\n        \"on_screen_text\": \"What HCA training looks like\",\n        \"preferred_source\": \"pexels\",\n        \"asset_choice_reason\": \"A real adult learner or instructor scene creates trust immediately and feels more believable than an illustrated opener.\",\n        \"pexels_query\": \"adult healthcare training classroom\",\n        \"fallback_image_prompt\": \"Ultra-realistic adult learner in a calm healthcare training classroom, practical Washington training setting, no text, no logos\",\n        \"asset_notes\": \"Use a calm, professional classroom or instructor visual.\",\n        \"caption_text\": \"Thinking about caregiving work in Washington? Here is what HCA training actually looks like.\",\n        \"badge_label\": \"\",\n        \"badge_value\": \"\"\n      }\n    ]\n  }\n}"
+      },
+      "id": "3f73a309-f2a7-4dcb-a1ca-bf1432f6f13b",
+      "name": "Social Plan Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2520,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = items[0]?.json || {};\nlet payload = raw.output ?? raw.response ?? raw.text ?? raw;\nif (typeof payload === 'string') {\n  try { payload = JSON.parse(payload); } catch (e) {}\n}\npayload = payload.social_video_plan || payload;\nconst cfg = $('Build Existing Video Library').first().json;\nconst clean = (v) => String(v || '').replace(/\\s+/g, ' ').trim();\nconst slugify = (v) => clean(v).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/--+/g, '-');\nconst clamp = (n, min, max) => Math.max(min, Math.min(max, Number(n || 0) || 0));\nconst words = (v) => clean(v).split(' ').filter(Boolean).length;\nconst normalizePlatforms = (value) => Array.isArray(value) && value.length ? value.map((entry) => String(entry)) : ['instagram_reels', 'facebook_reels', 'tiktok'];\nlet scenes = Array.isArray(payload.scene_plan) ? payload.scene_plan : [];\nif (!scenes.length) throw new Error('No scenes were generated by the planner.');\nscenes = scenes.slice(0, Number(cfg.max_total_scenes || 8)).map((scene, idx) => ({\n  scene_index: idx + 1,\n  role: ['hook', 'pain', 'solution', 'proof', 'offer', 'cta'].includes(String(scene.role || '').toLowerCase()) ? String(scene.role).toLowerCase() : (idx === 0 ? 'hook' : (idx === scenes.length - 1 ? 'cta' : 'solution')),\n  headline: clean(scene.headline || ''),\n  supporting_text: clean(scene.supporting_text || ''),\n  narration: clean(scene.narration || ''),\n  on_screen_text: clean(scene.on_screen_text || ''),\n  preferred_source: String(scene.preferred_source || 'pexels').toLowerCase() === 'generated_image' ? 'generated_image' : 'pexels',\n  asset_choice_reason: clean(scene.asset_choice_reason || ''),\n  pexels_query: clean(scene.pexels_query || payload.video_title || cfg.acquisition_summary?.title_hint || 'healthcare training'),\n  fallback_image_prompt: clean(scene.fallback_image_prompt || `Ultra-realistic vertical still for ${payload.video_title || cfg.acquisition_summary?.title_hint || 'ExcelCNA social video'}, no text, no logos`),\n  asset_notes: clean(scene.asset_notes || ''),\n  caption_text: clean(scene.caption_text || scene.narration || scene.on_screen_text),\n  badge_label: clean(scene.badge_label || ''),\n  badge_value: clean(scene.badge_value || ''),\n  duration_seconds: Number(scene.duration_seconds || 0) || 0\n})).filter((scene) => scene.narration || scene.on_screen_text || scene.headline);\nif (!scenes.length) throw new Error('Planner output could not be converted into scenes.');\nconst openingHook = clean(payload.opening_hook || cfg.acquisition_summary?.hook_hint || cfg.acquisition_summary?.title_hint);\nconst ctaLine = clean(payload.cta_line || `Visit ${cfg.routing?.resolved_target_url || cfg.planner_context?.targetUrl} to get started.`);\nlet fullVoiceover = clean(payload.full_voiceover_script || '');\nif (!fullVoiceover) fullVoiceover = [openingHook, ...scenes.map((scene) => scene.narration), ctaLine].filter(Boolean).join(' ');\nif (openingHook && !fullVoiceover.toLowerCase().includes(openingHook.toLowerCase().slice(0, 18))) fullVoiceover = `${openingHook} ${fullVoiceover}`;\nif (ctaLine && !fullVoiceover.toLowerCase().includes(ctaLine.toLowerCase().slice(0, 18))) fullVoiceover = `${fullVoiceover} ${ctaLine}`;\nfullVoiceover = clean(fullVoiceover);\nif (!fullVoiceover) throw new Error('Voiceover script is missing after parsing.');\nconst speechDuration = Math.ceil(words(fullVoiceover) / 2.45) + 4;\nconst requested = Number(cfg.planner_context?.requestedDurationSec || cfg.requested_duration_seconds || 0) || 0;\nconst plannerDuration = Number(payload.target_duration_seconds || 0) || 0;\nlet targetDuration = Math.max(requested || 0, plannerDuration || 0, speechDuration || 0, Number(cfg.min_duration_seconds || 50));\ntargetDuration = clamp(targetDuration, Number(cfg.min_duration_seconds || 50), Number(cfg.max_duration_seconds || 120));\nconst totalWeight = scenes.reduce((sum, scene) => sum + Math.max(words(scene.narration), 3), 0);\nlet assigned = 0;\nscenes = scenes.map((scene) => {\n  const weight = Math.max(words(scene.narration), 3);\n  const planned = scene.duration_seconds > 0 ? scene.duration_seconds : Math.max(5, Math.round((weight / totalWeight) * targetDuration));\n  assigned += planned;\n  return { ...scene, duration_seconds: planned };\n});\nif (assigned !== targetDuration && scenes.length) {\n  scenes[scenes.length - 1].duration_seconds = Math.max(5, scenes[scenes.length - 1].duration_seconds + (targetDuration - assigned));\n}\nconst hashtags = Array.isArray(payload.hashtags) ? payload.hashtags.filter(Boolean).slice(0, 8).map((v) => String(v)) : ['#ExcelCNA'];\nconst videoTitle = clean(payload.video_title || cfg.acquisition_summary?.title_hint || 'ExcelCNA social video');\nconst targetUrl = clean(payload.target_url || cfg.routing?.resolved_target_url || cfg.planner_context?.targetUrl);\nreturn [{ json: {\n  ...cfg,\n  video_title: videoTitle,\n  slug: slugify(payload.slug || videoTitle || 'excelcna-social-video'),\n  template_family: ['proof-driven', 'problem-solution', 'story/testimonial'].includes(payload.template_family) ? payload.template_family : (cfg.planner_context?.templateFamilyHint || 'proof-driven'),\n  target_duration_seconds: targetDuration,\n  platforms: normalizePlatforms(payload.platforms),\n  target_url: targetUrl,\n  voice_style: clean(payload.voice_style || 'warm, practical, credible, calm, adult'),\n  opening_hook: openingHook,\n  cta_line: ctaLine,\n  full_voiceover_script: fullVoiceover,\n  tts_input_text: fullVoiceover,\n  caption: clean(payload.caption || `${openingHook} ${ctaLine}`),\n  hashtags,\n  why_this_angle: clean(payload.why_this_angle || ''),\n  scene_plan: scenes,\n  scene_count: scenes.length,\n  dedupe_key: slugify(payload.dedupe_key || [videoTitle, openingHook, targetUrl].join(' | '))\n}}];"
+      },
+      "id": "db4f144e-f157-4704-a8df-b3d0e7fd26d8",
+      "name": "Parse Social Plan",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2740,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = items[0].json;\nconst norm = (v) => String(v || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();\nconst titleNorm = norm(j.video_title);\nconst hookNorm = norm(j.opening_hook);\nconst keyNorm = norm(j.dedupe_key);\nconst targetNorm = norm(j.target_url);\nconst matches = (j.existing_video_library || []).filter((v) => {\n  const vt = norm(v.title);\n  const vh = norm(v.hook);\n  const vk = norm(v.dedupe_key);\n  const page = norm(v.target_page);\n  return (vk && vk === keyNorm) || ((page && page === targetNorm) && ((vt && vt === titleNorm) || (vh && vh === hookNorm)));\n});\nreturn [{ json: { ...j, is_duplicate: matches.length > 0, duplicate_matches: matches.slice(0, 6) } }];"
+      },
+      "id": "28d2f331-25d9-43a6-a3d3-0b1fb9861d82",
+      "name": "Check Duplicate Against Sheet",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2960,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "duplicate-condition",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.is_duplicate }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8323442b-a006-4dba-91cc-e0a0f539273a",
+      "name": "If Duplicate?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3180,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = items[0].json;\nconst prompt = `The first draft matched an existing video angle. You must create a materially different ExcelCNA social video plan for the same business goal.\n\nUse these rules:\n${j.social_skill_markdown}\n\nORIGINAL SOURCE PAYLOAD:\n${JSON.stringify(j.source_payload, null, 2)}\n\nFIRST DRAFT THAT MUST NOT BE REPEATED:\n${JSON.stringify({ video_title: j.video_title, opening_hook: j.opening_hook, why_this_angle: j.why_this_angle, dedupe_key: j.dedupe_key }, null, 2)}\n\nMATCHING EXISTING VIDEOS:\n${JSON.stringify(j.duplicate_matches || [], null, 2)}\n\nTASK:\nCreate a stronger alternative angle for the same business goal.\n- Do not reuse the same title structure.\n- Do not reuse the same hook structure.\n- Do not reuse the same promise framing.\n- Prefer a different narrative arc or self-qualification angle.\n- Final duration must stay between ${j.planner_context.minDurationSec} and ${j.planner_context.maxDurationSec} seconds.\n- Return only JSON matching the same schema.`;\nreturn [{ json: { ...j, alternate_planning_prompt: prompt } }];"
+      },
+      "id": "f28e3024-71ea-4f79-a54b-78c7ab18b74c",
+      "name": "Prepare Alternate Social Plan Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3400,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.alternate_planning_prompt }}",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "id": "8c3950f1-c6b0-40db-92d2-f4ad3444ea4c",
+      "name": "Alternate Social Video Planning Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        3620,
+        400
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4-2026-03-05",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4-2026-03-05"
+        },
+        "options": {}
+      },
+      "id": "8df9be97-b1a1-4a94-8d88-78ac337c869d",
+      "name": "GPT-5.4 Alternate Planner Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3540,
+        660
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "TUDXtY3eG3EKPc8O",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "aa395f59-778f-46b7-aa6f-9d91a3fa96fa",
+      "name": "Alternate Plan Auto-fixing Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        3700,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"social_video_plan\": {\n    \"video_title\": \"Who HCA Training Is A Good Fit For in Washington\",\n    \"slug\": \"who-hca-training-is-a-good-fit-for-in-washington\",\n    \"template_family\": \"proof-driven\",\n    \"target_duration_seconds\": 66,\n    \"platforms\": [\"instagram_reels\", \"facebook_reels\", \"tiktok\"],\n    \"target_url\": \"https://www.excelcna.com/hca/lp/searchers\",\n    \"voice_style\": \"warm, practical, credible, calm, adult\",\n    \"opening_hook\": \"Not sure if HCA training is actually the right fit for you? Here is who it helps most.\",\n    \"cta_line\": \"Visit ExcelCNA and look at the HCA training page to see if it fits your next step.\",\n    \"full_voiceover_script\": \"Not sure if HCA training is actually the right fit for you? Here is who it helps most.\",\n    \"caption\": \"A practical explanation of who HCA training is a good fit for.\",\n    \"hashtags\": [\"#HCATraining\", \"#ExcelCNA\"],\n    \"why_this_angle\": \"This version helps uncertain adults self-qualify.\",\n    \"dedupe_key\": \"who-hca-training-is-a-good-fit-for-in-washington\",\n    \"scene_plan\": [\n      {\n        \"scene_index\": 1,\n        \"role\": \"hook\",\n        \"duration_seconds\": 8,\n        \"headline\": \"Who HCA training fits\",\n        \"supporting_text\": \"A practical fit-check for adults in Washington.\",\n        \"narration\": \"Not sure if HCA training is actually the right fit for you? Here is who it helps most.\",\n        \"on_screen_text\": \"Who HCA training fits\",\n        \"preferred_source\": \"pexels\",\n        \"asset_choice_reason\": \"A real adult learner visual makes the hook feel personal and believable.\",\n        \"pexels_query\": \"adult career change healthcare\",\n        \"fallback_image_prompt\": \"Ultra-realistic adult considering a healthcare training path in a calm professional setting, no text, no logos\",\n        \"asset_notes\": \"Use an adult learner, not a hospital scene.\",\n        \"caption_text\": \"Not sure if HCA training is actually the right fit for you?\",\n        \"badge_label\": \"\",\n        \"badge_value\": \"\"\n      }\n    ]\n  }\n}"
+      },
+      "id": "c235730b-fd81-4db3-8e8a-2fb0c2352682",
+      "name": "Alternate Plan Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        3860,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = items[0]?.json || {};\nlet payload = raw.output ?? raw.response ?? raw.text ?? raw;\nif (typeof payload === 'string') {\n  try { payload = JSON.parse(payload); } catch (e) {}\n}\npayload = payload.social_video_plan || payload;\nconst cfg = $('Prepare Alternate Social Plan Prompt').first().json;\nconst clean = (v) => String(v || '').replace(/\\s+/g, ' ').trim();\nconst slugify = (v) => clean(v).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/--+/g, '-');\nconst clamp = (n, min, max) => Math.max(min, Math.min(max, Number(n || 0) || 0));\nconst words = (v) => clean(v).split(' ').filter(Boolean).length;\nlet scenes = Array.isArray(payload.scene_plan) ? payload.scene_plan : [];\nif (!scenes.length) throw new Error('No alternate scenes were generated by the planner.');\nscenes = scenes.slice(0, Number(cfg.max_total_scenes || 8)).map((scene, idx) => ({\n  scene_index: idx + 1,\n  role: ['hook', 'pain', 'solution', 'proof', 'offer', 'cta'].includes(String(scene.role || '').toLowerCase()) ? String(scene.role).toLowerCase() : (idx === 0 ? 'hook' : (idx === scenes.length - 1 ? 'cta' : 'solution')),\n  headline: clean(scene.headline || ''),\n  supporting_text: clean(scene.supporting_text || ''),\n  narration: clean(scene.narration || ''),\n  on_screen_text: clean(scene.on_screen_text || ''),\n  preferred_source: String(scene.preferred_source || 'pexels').toLowerCase() === 'generated_image' ? 'generated_image' : 'pexels',\n  asset_choice_reason: clean(scene.asset_choice_reason || ''),\n  pexels_query: clean(scene.pexels_query || payload.video_title || cfg.acquisition_summary?.title_hint || 'healthcare training'),\n  fallback_image_prompt: clean(scene.fallback_image_prompt || `Ultra-realistic vertical still for ${payload.video_title || cfg.acquisition_summary?.title_hint || 'ExcelCNA social video'}, no text, no logos`),\n  asset_notes: clean(scene.asset_notes || ''),\n  caption_text: clean(scene.caption_text || scene.narration || scene.on_screen_text),\n  badge_label: clean(scene.badge_label || ''),\n  badge_value: clean(scene.badge_value || ''),\n  duration_seconds: Number(scene.duration_seconds || 0) || 0\n})).filter((scene) => scene.narration || scene.on_screen_text || scene.headline);\nconst openingHook = clean(payload.opening_hook || cfg.acquisition_summary?.hook_hint || cfg.acquisition_summary?.title_hint);\nconst ctaLine = clean(payload.cta_line || `Visit ${cfg.routing?.resolved_target_url || cfg.planner_context?.targetUrl} to get started.`);\nlet fullVoiceover = clean(payload.full_voiceover_script || '');\nif (!fullVoiceover) fullVoiceover = [openingHook, ...scenes.map((scene) => scene.narration), ctaLine].filter(Boolean).join(' ');\nfullVoiceover = clean(fullVoiceover);\nconst speechDuration = Math.ceil(words(fullVoiceover) / 2.45) + 4;\nlet targetDuration = Math.max(Number(cfg.planner_context?.requestedDurationSec || cfg.requested_duration_seconds || 0), Number(payload.target_duration_seconds || 0), speechDuration || 0, Number(cfg.min_duration_seconds || 50));\ntargetDuration = clamp(targetDuration, Number(cfg.min_duration_seconds || 50), Number(cfg.max_duration_seconds || 120));\nconst totalWeight = scenes.reduce((sum, scene) => sum + Math.max(words(scene.narration), 3), 0);\nlet assigned = 0;\nscenes = scenes.map((scene) => {\n  const weight = Math.max(words(scene.narration), 3);\n  const planned = scene.duration_seconds > 0 ? scene.duration_seconds : Math.max(5, Math.round((weight / totalWeight) * targetDuration));\n  assigned += planned;\n  return { ...scene, duration_seconds: planned };\n});\nif (assigned !== targetDuration && scenes.length) scenes[scenes.length - 1].duration_seconds = Math.max(5, scenes[scenes.length - 1].duration_seconds + (targetDuration - assigned));\nreturn [{ json: {\n  ...cfg,\n  video_title: clean(payload.video_title || cfg.acquisition_summary?.title_hint || 'ExcelCNA social video'),\n  slug: slugify(payload.slug || payload.video_title || cfg.acquisition_summary?.title_hint || 'excelcna-social-video'),\n  template_family: ['proof-driven', 'problem-solution', 'story/testimonial'].includes(payload.template_family) ? payload.template_family : (cfg.planner_context?.templateFamilyHint || 'proof-driven'),\n  target_duration_seconds: targetDuration,\n  platforms: Array.isArray(payload.platforms) && payload.platforms.length ? payload.platforms : ['instagram_reels', 'facebook_reels', 'tiktok'],\n  target_url: clean(payload.target_url || cfg.routing?.resolved_target_url || cfg.planner_context?.targetUrl),\n  voice_style: clean(payload.voice_style || 'warm, practical, credible, calm, adult'),\n  opening_hook: openingHook,\n  cta_line: ctaLine,\n  full_voiceover_script: fullVoiceover,\n  tts_input_text: fullVoiceover,\n  caption: clean(payload.caption || `${openingHook} ${ctaLine}`),\n  hashtags: Array.isArray(payload.hashtags) && payload.hashtags.length ? payload.hashtags.filter(Boolean).slice(0, 8).map((v) => String(v)) : ['#ExcelCNA'],\n  why_this_angle: clean(payload.why_this_angle || ''),\n  scene_plan: scenes,\n  scene_count: scenes.length,\n  dedupe_key: slugify(payload.dedupe_key || [payload.video_title || cfg.acquisition_summary?.title_hint, openingHook, cfg.routing?.resolved_target_url].join(' | ')),\n  replanned_from_duplicate: true\n}}];"
+      },
+      "id": "c8a36be8-fbd5-4122-8ea1-4aa44a2c7160",
+      "name": "Parse Alternate Social Plan",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4080,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = items[0].json;\nconst norm = (v) => String(v || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();\nconst titleNorm = norm(j.video_title);\nconst hookNorm = norm(j.opening_hook);\nconst keyNorm = norm(j.dedupe_key);\nconst targetNorm = norm(j.target_url);\nconst matches = (j.existing_video_library || []).filter((v) => {\n  const vt = norm(v.title);\n  const vh = norm(v.hook);\n  const vk = norm(v.dedupe_key);\n  const page = norm(v.target_page);\n  return (vk && vk === keyNorm) || ((page && page === targetNorm) && ((vt && vt === titleNorm) || (vh && vh === hookNorm)));\n});\nreturn [{ json: { ...j, is_duplicate: matches.length > 0, duplicate_matches: matches.slice(0, 6) } }];"
+      },
+      "id": "36ff2cf4-ee8d-415c-bf4c-58fd31e45655",
+      "name": "Check Alternate Duplicate Against Sheet",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4300,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "alternate-duplicate-condition",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.is_duplicate }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b8b2e5cf-eefe-42c4-a1f8-7e2c4ab65c15",
+      "name": "If Alternate Still Duplicate?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4520,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = items[0].json;\nreturn [{ json: {\n  created_at: new Date().toISOString(),\n  status: 'skipped_duplicate_after_replan',\n  week_id: j.week_id,\n  action_id: j.action_id,\n  video_title: j.video_title,\n  slug: j.slug,\n  hook_line: j.opening_hook,\n  target_page: j.target_url,\n  dedupe_key: j.dedupe_key,\n  duration_seconds: j.target_duration_seconds,\n  scene_count: j.scene_count,\n  render_id: '',\n  storage_url: '',\n  remotion_payload_url: '',\n  asset_credits_json: JSON.stringify(j.duplicate_matches || []),\n  notes: 'Skipped after one alternate re-plan because a materially similar video still exists in the log.'\n}}];"
+      },
+      "id": "e1c32474-42b7-4c67-8193-d53a04ce3cd7",
+      "name": "Prepare Skip Row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4740,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "=1u291IYc0dWz6a49_CVicjeD1RT0lG5lIbmRrR3Vsogc",
+          "mode": ""
+        },
+        "sheetName": "={{ $('Normalize Social Payload Remotion').first().json.google_sheet_sheet_name }}",
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "79a2d970-09c2-47d5-a045-53574a398fda",
+      "name": "Append Skip Row to Google Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        4960,
+        320
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "fiSel98a0BR5HcO5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { ...items[0].json, result: 'duplicate_skipped_after_replan' } }];"
+      },
+      "id": "c81b384c-0cd4-460d-b84a-fc7230a12e54",
+      "name": "Final Duplicate Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5180,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = items[0].json;\nconst scenes = Array.isArray(j.scene_plan) ? j.scene_plan : [];\nreturn scenes.map((scene, idx) => ({\n  json: {\n    week_id: j.week_id,\n    action_id: j.action_id,\n    slug: j.slug,\n    video_title: j.video_title,\n    target_url: j.target_url,\n    dedupe_key: j.dedupe_key,\n    bucket_name: j.bucket_name,\n    gcs_base_url: j.gcs_base_url,\n    image_model: j.image_model,\n    scene_index: Number(scene.scene_index || idx + 1),\n    scene_duration_seconds: Number(scene.duration_seconds || 8),\n    role: scene.role || (idx === 0 ? 'hook' : 'solution'),\n    headline: scene.headline || '',\n    supporting_text: scene.supporting_text || '',\n    narration: scene.narration || '',\n    on_screen_text: scene.on_screen_text || '',\n    caption_text: scene.caption_text || scene.narration || scene.on_screen_text || '',\n    badge_label: scene.badge_label || '',\n    badge_value: scene.badge_value || '',\n    preferred_source: String(scene.preferred_source || 'pexels').toLowerCase(),\n    asset_choice_reason: scene.asset_choice_reason || '',\n    pexels_query: scene.pexels_query || j.video_title,\n    fallback_image_prompt: scene.fallback_image_prompt || `Ultra-realistic vertical still for ${j.video_title}, no text, no logos`,\n    asset_notes: scene.asset_notes || '',\n    gcs_object_name: `social-videos/${j.slug}/scene-${String(scene.scene_index || idx + 1).padStart(2, '0')}.png`,\n    gcs_public_url: `${j.gcs_base_url}/${j.bucket_name}/social-videos/${j.slug}/scene-${String(scene.scene_index || idx + 1).padStart(2, '0')}.png`,\n    template_family: j.template_family,\n    opening_hook: j.opening_hook,\n    cta_line: j.cta_line,\n    full_voiceover_script: j.full_voiceover_script,\n    tts_input_text: j.tts_input_text,\n    caption: j.caption,\n    hashtags: j.hashtags,\n    why_this_angle: j.why_this_angle,\n    scene_count: scenes.length,\n    target_duration_seconds: j.target_duration_seconds,\n    brand_seed: j.planner_context.brandSeed\n  },\n  pairedItem: 0\n}));"
+      },
+      "id": "f7167d5a-cf62-4242-8fba-54375c0a61a7",
+      "name": "Create Scene Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4740,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Normalize Social Payload Remotion').first().json.pexels_api_base }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $json.pexels_query }}"
+            },
+            {
+              "name": "per_page",
+              "value": "3"
+            },
+            {
+              "name": "orientation",
+              "value": "portrait"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "60524179-b308-4a1f-a27d-0fb3451b9738",
+      "name": "Search Pexels Photo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4960,
+        560
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "GMk8vyUCMFD3NMV3",
+          "name": "Header Auth account 2"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = [];\nfor (let i = 0; i < items.length; i++) {\n  const resp = items[i].json || {};\n  const scene = $('Create Scene Items').itemMatching(i).json;\n  const photos = Array.isArray(resp.photos) ? resp.photos : [];\n  const first = photos.map((photo) => ({\n    imageUrl: photo?.src?.large2x || photo?.src?.large || photo?.src?.original || '',\n    photoPage: photo?.url || '',\n    photographer: photo?.photographer || ''\n  })).find((photo) => photo.imageUrl) || null;\n  const pexelsImageUrl = first?.imageUrl || '';\n  out.push({\n    json: {\n      ...scene,\n      pexels_found: !!pexelsImageUrl,\n      pexels_image_url: pexelsImageUrl,\n      pexels_credit: pexelsImageUrl ? {\n        type: 'pexels',\n        photo_page: first.photoPage,\n        photographer: first.photographer,\n        query: scene.pexels_query,\n        reason: scene.asset_choice_reason || ''\n      } : null,\n      needs_generated_image: scene.preferred_source === 'generated_image' || !pexelsImageUrl\n    },\n    pairedItem: i\n  });\n}\nreturn out;"
+      },
+      "id": "111f664d-e4e0-4391-ae38-0d52f0fd8ec6",
+      "name": "Extract Pexels Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5180,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "need-generated-image-condition",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.needs_generated_image }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "517dcaef-b748-498b-bb9e-a005f05595d7",
+      "name": "If Need Generated Image?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        5400,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "model": "={{ $('Normalize Social Payload Remotion').first().json.image_model }}",
+        "prompt": "=Generate one ultra-realistic vertical social-video still for ExcelCNA. No text, no logos, no watermarks, no collage. {{ $json.fallback_image_prompt }}",
+        "options": {}
+      },
+      "id": "f4e9a7e4-5c4b-40ab-ad46-c986ff857c2e",
+      "name": "Generate Scene Image",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        5620,
+        460
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "TUDXtY3eG3EKPc8O",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "object",
+        "operation": "create",
+        "bucketName": "={{ $('Normalize Social Payload Remotion').first().json.bucket_name }}",
+        "objectName": "={{ $('Extract Pexels Result').item.json.gcs_object_name }}",
+        "createData": {},
+        "createQuery": {},
+        "encryptionHeaders": {},
+        "requestOptions": {
+          "batching": {
+            "batch": {
+              "batchSize": 1
+            }
+          }
+        }
+      },
+      "id": "2bad2db2-8902-4f45-ba8d-3e3fbcf83505",
+      "name": "Upload Generated Scene Image to GCS",
+      "type": "n8n-nodes-base.googleCloudStorage",
+      "typeVersion": 1,
+      "position": [
+        5840,
+        460
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "0o1Qq6fhfJ29JDrH",
+          "name": "Google Cloud Storage account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "generated-scene-payload",
+              "name": "scene_payload",
+              "type": "json",
+              "value": "={{ { scene_index: $('Extract Pexels Result').item.json.scene_index, scene_duration_seconds: $('Extract Pexels Result').item.json.scene_duration_seconds, role: $('Extract Pexels Result').item.json.role, headline: $('Extract Pexels Result').item.json.headline, supporting_text: $('Extract Pexels Result').item.json.supporting_text, narration: $('Extract Pexels Result').item.json.narration, on_screen_text: $('Extract Pexels Result').item.json.on_screen_text, caption_text: $('Extract Pexels Result').item.json.caption_text, badge_label: $('Extract Pexels Result').item.json.badge_label, badge_value: $('Extract Pexels Result').item.json.badge_value, scene_asset_url: $('Extract Pexels Result').item.json.gcs_public_url, asset_credit_json: JSON.stringify({ type: 'generated', prompt: $('Extract Pexels Result').item.json.fallback_image_prompt, reason: $('Extract Pexels Result').item.json.asset_choice_reason || '' }) } }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3e37c828-8ea0-4e60-aec9-65362f33555b",
+      "name": "Set Generated Scene URL",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6060,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "pexels-scene-payload",
+              "name": "scene_payload",
+              "type": "json",
+              "value": "={{ { scene_index: $json.scene_index, scene_duration_seconds: $json.scene_duration_seconds, role: $json.role, headline: $json.headline, supporting_text: $json.supporting_text, narration: $json.narration, on_screen_text: $json.on_screen_text, caption_text: $json.caption_text, badge_label: $json.badge_label, badge_value: $json.badge_value, scene_asset_url: $json.pexels_image_url, asset_credit_json: JSON.stringify($json.pexels_credit || {}) } }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cf0f2e3c-4a37-4f7c-ac68-e3276fb9ffbf",
+      "name": "Set Pexels Scene URL",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5620,
+        660
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "08109aa6-f037-47c1-9fe0-edc21cc17f48",
+      "name": "Merge Scene Assets",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        6280,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const scenes = items.map((i) => i.json.scene_payload || i.json || {}).filter((s) => s.scene_asset_url).sort((a, b) => Number(a.scene_index || 0) - Number(b.scene_index || 0));\nconst plan = $('Create Scene Items').first().json;\nif (!plan.tts_input_text) throw new Error('Voiceover script is missing before TTS generation.');\nif (!scenes.length) throw new Error('No scenes were assembled.');\nconst missingAsset = scenes.find((scene) => !scene.scene_asset_url);\nif (missingAsset) throw new Error(`Required asset URL missing for scene ${missingAsset.scene_index}.`);\nconst credits = scenes.map((scene) => { try { return JSON.parse(scene.asset_credit_json || '{}'); } catch (e) { return {}; } });\nconst generatedCount = credits.filter((credit) => credit.type === 'generated').length;\nreturn [{ json: {\n  ...plan,\n  generated_scene_count: generatedCount,\n  pexels_scene_count: scenes.length - generatedCount,\n  scenes,\n  asset_credits_json: JSON.stringify(credits)\n}}];"
+      },
+      "id": "581fdd2f-34d8-437a-991d-7a7cdcce5d4a",
+      "name": "Assemble Scene Assets",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6500,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = items[0].json;\nif (!j.tts_input_text) throw new Error('Voiceover script is missing.');\nconst ttsInstructions = `Read this like a calm, trustworthy, practical adult guide. Keep the delivery warm and human, not salesy, not robotic, and not overexcited. End with a grounded call to action.`;\nconst body = {\n  model: j.tts_model || 'gpt-4o-mini-tts',\n  input: j.tts_input_text,\n  voice: j.tts_voice || 'ash',\n  instructions: ttsInstructions,\n  response_format: 'mp3',\n  speed: Number(j.tts_speed || 0.96)\n};\nreturn [{ json: { ...j, tts_request_body: body, voiceover_object_name: `social-videos/${j.slug}/voiceover.mp3`, voiceover_public_url: `${j.gcs_base_url}/${j.bucket_name}/social-videos/${j.slug}/voiceover.mp3` } }];"
+      },
+      "id": "af5c13eb-7886-4953-a9ff-953ffbb80dc5",
+      "name": "Prepare TTS Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6720,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ `${$('Normalize Social Payload Remotion').first().json.openai_api_base}/audio/speech` }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.tts_request_body) }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "id": "f6f6c098-a0e3-4e22-a7cc-b5c2f7f28a81",
+      "name": "Generate Voiceover (HTTP TTS)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6940,
+        560
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "INH556JxWuC9vpVu",
+          "name": "Header Auth account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "object",
+        "operation": "create",
+        "bucketName": "={{ $('Normalize Social Payload Remotion').first().json.bucket_name }}",
+        "objectName": "={{ $('Prepare TTS Request').first().json.voiceover_object_name }}",
+        "createData": {},
+        "createQuery": {},
+        "encryptionHeaders": {},
+        "requestOptions": {
+          "batching": {
+            "batch": {
+              "batchSize": 1
+            }
+          }
+        }
+      },
+      "id": "3953f464-4623-4683-bd0d-b1fd0fe58861",
+      "name": "Upload Voiceover to GCS",
+      "type": "n8n-nodes-base.googleCloudStorage",
+      "typeVersion": 1,
+      "position": [
+        7160,
+        560
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "0o1Qq6fhfJ29JDrH",
+          "name": "Google Cloud Storage account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "voiceover-url-assignment",
+              "name": "voiceover_url",
+              "type": "string",
+              "value": "={{ $('Prepare TTS Request').first().json.voiceover_public_url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8080c652-aa83-4825-b2d7-5ec9640e0848",
+      "name": "Set Voiceover URL",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        7380,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const base = $('Prepare TTS Request').first().json;\nconst voice = $('Set Voiceover URL').first().json.voiceover_url;\nif (!Array.isArray(base.scenes) || !base.scenes.length) throw new Error('No scenes found for Remotion package assembly.');\nif (!voice) throw new Error('Voiceover URL missing before Remotion package assembly.');\nconst brand = base.planner_context.brandSeed || {};\nconst remotionPayload = {\n  adId: base.planner_context.adId,\n  campaignId: base.planner_context.campaignId,\n  templateFamily: base.template_family,\n  brandName: brand.brandName || 'ExcelCNA',\n  ctaLabel: base.cta_line || 'Learn more',\n  ctaUrl: base.target_url,\n  trackingSlug: base.slug,\n  aspectRatio: '9:16',\n  logoUrl: brand.logoUrl || 'https://placehold.co/512x512/png?text=ExcelCNA',\n  primaryColor: brand.primaryColor || '#0E7490',\n  secondaryColor: brand.secondaryColor || '#F59E0B',\n  textColor: brand.textColor || '#F8FAFC',\n  accentColor: brand.accentColor || '#FDE68A',\n  surfaceColor: brand.surfaceColor || '#08101F',\n  voiceoverUrl: voice,\n  targetDurationSec: Number(base.target_duration_seconds || 60),\n  scenes: base.scenes.map((scene) => ({\n    id: `scene-${String(scene.scene_index).padStart(2, '0')}`,\n    role: scene.role,\n    headline: scene.headline || scene.on_screen_text || '',\n    supportingText: scene.supporting_text || '',\n    badgeLabel: scene.badge_label || undefined,\n    badgeValue: scene.badge_value || undefined,\n    mediaUrl: scene.scene_asset_url,\n    mediaType: 'image',\n    captionText: scene.caption_text || scene.narration || scene.on_screen_text || ''\n  })),\n  captions: {\n    phrases: base.scenes.map((scene) => ({\n      sceneId: `scene-${String(scene.scene_index).padStart(2, '0')}`,\n      text: scene.caption_text || scene.narration || scene.on_screen_text || ''\n    })).filter((entry) => entry.text)\n  }\n};\nconst renderRequest = {\n  compositionId: 'SocialAd',\n  payload: remotionPayload,\n  slug: base.slug,\n  outputObjectName: `social-videos/${base.slug}/render.mp4`\n};\nreturn [{ json: {\n  ...base,\n  voiceover_url: voice,\n  remotion_payload: remotionPayload,\n  remotion_payload_json: JSON.stringify(remotionPayload),\n  remotion_render_request: renderRequest\n}}];"
+      },
+      "id": "59b4c16b-2be9-4cf6-a535-aaee6b407584",
+      "name": "Build Remotion Render Package",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7600,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "render-api-configured-condition",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.remotion_render_api_url }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4f07cc98-4182-49f3-b09d-c0349260cb8a",
+      "name": "If Render API Configured?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        7820,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.remotion_render_api_url }}",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.remotion_render_request) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "37d2b110-7ab8-4275-9f38-03efb52e6461",
+      "name": "Call Remotion Render API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        8040,
+        460
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 3000
+    },
+    {
+      "parameters": {
+        "jsCode": "const base = $('Build Remotion Render Package').first().json;\nreturn [{ json: {\n  created_at: new Date().toISOString(),\n  status: 'remotion_package_ready',\n  week_id: base.week_id,\n  action_id: base.action_id,\n  video_title: base.video_title,\n  slug: base.slug,\n  hook_line: base.opening_hook,\n  target_page: base.target_url,\n  dedupe_key: base.dedupe_key,\n  duration_seconds: base.target_duration_seconds,\n  scene_count: base.scene_count,\n  render_id: '',\n  storage_url: '',\n  remotion_payload_url: '',\n  asset_credits_json: base.asset_credits_json || '[]',\n  notes: `Package ready for Remotion render. Voiceover: ${base.voiceover_url}. Scenes: ${base.scene_count}. Pexels: ${base.pexels_scene_count || 0}. Generated: ${base.generated_scene_count || 0}.`\n}}];"
+      },
+      "id": "f8e10d88-38f2-43ce-bd8e-c505ef3635e9",
+      "name": "Prepare Package Ready Row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        8040,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const resp = items[0].json || {};\nconst base = $('Build Remotion Render Package').first().json;\nreturn [{ json: {\n  created_at: new Date().toISOString(),\n  status: String(resp.status || 'remotion_render_requested'),\n  week_id: base.week_id,\n  action_id: base.action_id,\n  video_title: base.video_title,\n  slug: base.slug,\n  hook_line: base.opening_hook,\n  target_page: base.target_url,\n  dedupe_key: base.dedupe_key,\n  duration_seconds: base.target_duration_seconds,\n  scene_count: base.scene_count,\n  render_id: String(resp.render_id || resp.id || ''),\n  storage_url: String(resp.video_url || resp.storage_url || ''),\n  remotion_payload_url: '',\n  asset_credits_json: base.asset_credits_json || '[]',\n  notes: `Remotion render API called. Response status: ${String(resp.status || 'requested')}.`\n}}];"
+      },
+      "id": "8f5d4159-7ad0-4955-9b3d-51e46733f33a",
+      "name": "Prepare Rendered Row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        8260,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "=1u291IYc0dWz6a49_CVicjeD1RT0lG5lIbmRrR3Vsogc",
+          "mode": ""
+        },
+        "sheetName": "={{ $('Normalize Social Payload Remotion').first().json.google_sheet_sheet_name }}",
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "da5b8f77-b8eb-4165-bef0-9d64790ec517",
+      "name": "Append Result Row to Google Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        8480,
+        560
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "fiSel98a0BR5HcO5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const row = items[0].json || {};\nconst base = $('Build Remotion Render Package').first().json;\nreturn [{ json: { ...row, result: row.status, remotion_payload: base.remotion_payload, remotion_render_request: base.remotion_render_request, voiceover_url: base.voiceover_url, remotion_payload_json: base.remotion_payload_json } }];"
+      },
+      "id": "ab1234c2-e0a7-49b4-a15d-b147c46f8d92",
+      "name": "Final Output Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        8700,
+        560
+      ]
+    }
+  ],
+  "connections": {
+    "Normalize Social Payload Remotion": {
+      "main": [
+        [
+          {
+            "node": "Get Existing Video Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Existing Video Log": {
+      "main": [
+        [
+          {
+            "node": "Build Existing Video Library",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Existing Video Library": {
+      "main": [
+        [
+          {
+            "node": "Prepare Social Plan Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Social Plan Prompt": {
+      "main": [
+        [
+          {
+            "node": "Social Video Planning Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Social Video Planning Chain": {
+      "main": [
+        [
+          {
+            "node": "Parse Social Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-5.4 Social Planner Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Social Video Planning Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Social Plan Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Social Plan Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Social Video Planning Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Social Plan Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Social Plan Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Social Plan": {
+      "main": [
+        [
+          {
+            "node": "Check Duplicate Against Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Duplicate Against Sheet": {
+      "main": [
+        [
+          {
+            "node": "If Duplicate?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Duplicate?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Alternate Social Plan Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Scene Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Alternate Social Plan Prompt": {
+      "main": [
+        [
+          {
+            "node": "Alternate Social Video Planning Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alternate Social Video Planning Chain": {
+      "main": [
+        [
+          {
+            "node": "Parse Alternate Social Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-5.4 Alternate Planner Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Alternate Social Video Planning Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Alternate Plan Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alternate Plan Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Alternate Social Video Planning Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alternate Plan Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Alternate Plan Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Alternate Social Plan": {
+      "main": [
+        [
+          {
+            "node": "Check Alternate Duplicate Against Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Alternate Duplicate Against Sheet": {
+      "main": [
+        [
+          {
+            "node": "If Alternate Still Duplicate?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Alternate Still Duplicate?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Skip Row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Scene Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Skip Row": {
+      "main": [
+        [
+          {
+            "node": "Append Skip Row to Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append Skip Row to Google Sheet": {
+      "main": [
+        [
+          {
+            "node": "Final Duplicate Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Scene Items": {
+      "main": [
+        [
+          {
+            "node": "Search Pexels Photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Pexels Photo": {
+      "main": [
+        [
+          {
+            "node": "Extract Pexels Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Pexels Result": {
+      "main": [
+        [
+          {
+            "node": "If Need Generated Image?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Need Generated Image?": {
+      "main": [
+        [
+          {
+            "node": "Generate Scene Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Pexels Scene URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Scene Image": {
+      "main": [
+        [
+          {
+            "node": "Upload Generated Scene Image to GCS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Generated Scene Image to GCS": {
+      "main": [
+        [
+          {
+            "node": "Set Generated Scene URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Generated Scene URL": {
+      "main": [
+        [
+          {
+            "node": "Merge Scene Assets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Pexels Scene URL": {
+      "main": [
+        [
+          {
+            "node": "Merge Scene Assets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Scene Assets": {
+      "main": [
+        [
+          {
+            "node": "Assemble Scene Assets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assemble Scene Assets": {
+      "main": [
+        [
+          {
+            "node": "Prepare TTS Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare TTS Request": {
+      "main": [
+        [
+          {
+            "node": "Generate Voiceover (HTTP TTS)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Voiceover (HTTP TTS)": {
+      "main": [
+        [
+          {
+            "node": "Upload Voiceover to GCS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Voiceover to GCS": {
+      "main": [
+        [
+          {
+            "node": "Set Voiceover URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Voiceover URL": {
+      "main": [
+        [
+          {
+            "node": "Build Remotion Render Package",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Remotion Render Package": {
+      "main": [
+        [
+          {
+            "node": "If Render API Configured?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Render API Configured?": {
+      "main": [
+        [
+          {
+            "node": "Call Remotion Render API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Package Ready Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Remotion Render API": {
+      "main": [
+        [
+          {
+            "node": "Prepare Rendered Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Package Ready Row": {
+      "main": [
+        [
+          {
+            "node": "Append Result Row to Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Rendered Row": {
+      "main": [
+        [
+          {
+            "node": "Append Result Row to Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append Result Row to Google Sheet": {
+      "main": [
+        [
+          {
+            "node": "Final Output Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
