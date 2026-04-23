@@ -158,7 +158,13 @@ const renderExcelCnaEditorOnLambda = async (body) => {
   const deployment = await readDeploymentManifest(config.deploymentManifestPath);
   assertDeploymentManifest(deployment);
   const outKeyBase = slugify(body.slug || body.video_title || props.adId, props.adId);
-  const renderDefaults = getMergedRenderDefaults(deployment, config);
+  const requestedConcurrency = Number(body.renderConcurrency ?? body.concurrency);
+  const renderDefaults = {
+    ...getMergedRenderDefaults(deployment, config),
+    ...(Number.isFinite(requestedConcurrency) && requestedConcurrency > 0
+      ? { concurrency: Math.max(1, Math.min(20, Math.floor(requestedConcurrency))) }
+      : null),
+  };
 
   const render = await renderMediaOnLambda({
     region: deployment.region,

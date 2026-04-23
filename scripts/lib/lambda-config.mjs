@@ -87,7 +87,7 @@ export const getLambdaConfig = async (overrides = {}) => {
       ),
       concurrency: toNumber(
         overrides.concurrency ?? process.env.REMOTION_RENDER_CONCURRENCY,
-        20,
+        5,
       ),
       imageFormat: overrides.imageFormat || process.env.REMOTION_RENDER_IMAGE_FORMAT || "jpeg",
       maxRetries: toNumber(
