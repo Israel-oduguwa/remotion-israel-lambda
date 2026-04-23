@@ -33,8 +33,6 @@
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
-    "render:ad": "node scripts/render-social-ad.mjs",
-    "prepare:ad-payload": "node scripts/prepare-social-ad-payload.mjs",
     "serve:render-api": "node scripts/render-api.mjs",
     "lambda:deploy": "node scripts/deploy-remotion-lambda.mjs",
     "lambda:render": "node scripts/render-on-lambda.mjs",

@@ -11,13 +11,13 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { hexToRgba, seededIndex } from "../SocialAd/utils";
 import type { ExcelCNAEditorProps } from "./schema";
 import type {
   ResolvedEditorCaption,
   ResolvedEditorOverlay,
   ResolvedEditorScene,
 } from "./timeline";
+import { hexToRgba, seededIndex } from "./utils";
 
 type EditorSceneProps = {
   entry: ResolvedEditorScene;
